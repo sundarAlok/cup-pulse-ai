@@ -1,9 +1,37 @@
 const API_URL = "https://api.football-data.org/v4";
 
-export async function getMatches() {
+export type Match = {
+  id: number;
+  homeTeam: string;
+  awayTeam: string;
+  date: string;
+  status: string;
+  homeScore: number | null;
+  awayScore: number | null;
+};
+
+type FootballApiMatch = {
+  id: number;
+  utcDate: string;
+  status: string;
+  homeTeam?: {
+    name?: string;
+  };
+  awayTeam?: {
+    name?: string;
+  };
+  score?: {
+    fullTime?: {
+      home?: number | null;
+      away?: number | null;
+    };
+  };
+};
+
+export async function getMatches(): Promise<Match[]> {
   try {
     const response = await fetch(
-      `${API_URL}/competitions/WC/matches?limit=12`,
+      `${API_URL}/competitions/WC/matches`,
       {
         headers: {
           "X-Auth-Token":
@@ -19,10 +47,12 @@ export async function getMatches() {
       );
     }
 
-    const data = await response.json();
+    const data = (await response.json()) as {
+      matches?: FootballApiMatch[];
+    };
 
     return (
-      data.matches?.slice(0, 12).map((match: any) => ({
+      data.matches?.slice(0, 50).map((match) => ({
         id: match.id,
         homeTeam:
           match.homeTeam?.name ?? "Unknown Team",
@@ -34,12 +64,15 @@ export async function getMatches() {
           match.score?.fullTime?.home ?? null,
         awayScore:
           match.score?.fullTime?.away ?? null,
-      })) || []
+      })) ?? []
     );
   } catch (error) {
-    console.error("Football API Error:", error);
+    console.error(
+      "Football API Error:",
+      error
+    );
 
-    // Demo fallback for hackathon
+    // Hackathon fallback
     return [
       {
         id: 1,

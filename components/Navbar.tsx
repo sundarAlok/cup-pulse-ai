@@ -3,25 +3,63 @@
 import Link from "next/link";
 import { Trophy } from "lucide-react";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 
 const links = [
+  { name: "Home", href: "/" },
   { name: "Dashboard", href: "/dashboard" },
   { name: "Predictions", href: "/predictions" },
   { name: "Rewards", href: "/rewards" },
+  { name: "Leaderboard", href: "/leaderboard" },
   { name: "Injective", href: "/injective" },
 ];
+
+type User = {
+  id: number;
+  username: string;
+  points: number;
+};
 
 export default function Navbar() {
   const pathname = usePathname();
 
+  const [user, setUser] =
+    useState<User | null>(null);
+
+  useEffect(() => {
+    async function loadUser() {
+      try {
+        const res = await fetch("/api/me");
+
+        const data = await res.json();
+
+        if (data.authenticated) {
+          setUser(data.user);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    loadUser();
+  }, []);
+
+  async function handleLogout() {
+    await fetch("/api/logout", {
+      method: "POST",
+    });
+
+    window.location.href = "/";
+  }
+
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/90 backdrop-blur-md">
-      <div className="max-w-7xl mx-auto px-4 md:px-6 h-18 flex items-center justify-between">
+    <header className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/80 backdrop-blur-xl">
+      <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 md:px-6">
         <Link
           href="/"
-          className="flex items-center gap-3"
+          className="group flex items-center gap-3"
         >
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-600">
+          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 via-indigo-600 to-violet-600 shadow-lg">
             <Trophy
               size={20}
               className="text-white"
@@ -29,7 +67,7 @@ export default function Navbar() {
           </div>
 
           <div>
-            <h1 className="font-bold text-slate-900 text-lg">
+            <h1 className="text-lg font-extrabold text-slate-900">
               CupPulse AI
             </h1>
 
@@ -39,18 +77,19 @@ export default function Navbar() {
           </div>
         </Link>
 
-        <nav className="flex items-center gap-2">
+        <nav className="hidden items-center gap-2 lg:flex">
           {links.map((link) => {
-            const active = pathname === link.href;
+            const active =
+              pathname === link.href;
 
             return (
               <Link
                 key={link.href}
                 href={link.href}
-                className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
+                className={`rounded-xl px-4 py-2.5 text-sm font-semibold transition-all ${
                   active
-                    ? "bg-blue-600 text-white shadow-sm"
-                    : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                    ? "bg-gradient-to-r from-blue-600 to-violet-600 text-white"
+                    : "text-slate-600 hover:bg-slate-100"
                 }`}
               >
                 {link.name}
@@ -58,6 +97,45 @@ export default function Navbar() {
             );
           })}
         </nav>
+
+        <div className="hidden items-center gap-3 md:flex">
+          {user ? (
+            <>
+              <div className="rounded-xl border border-slate-200 bg-white px-4 py-2">
+                <p className="text-xs text-slate-500">
+                  {user.username}
+                </p>
+
+                <p className="font-bold text-blue-600">
+                  {user.points} pts
+                </p>
+              </div>
+
+              <button
+                onClick={handleLogout}
+                className="rounded-xl bg-red-500 px-4 py-2 text-sm font-semibold text-white hover:bg-red-600"
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <Link
+                href="/login"
+                className="rounded-xl border border-slate-200 px-4 py-2 text-sm font-semibold"
+              >
+                Login
+              </Link>
+
+              <Link
+                href="/register"
+                className="rounded-xl bg-gradient-to-r from-blue-600 to-violet-600 px-4 py-2 text-sm font-semibold text-white"
+              >
+                Register
+              </Link>
+            </>
+          )}
+        </div>
       </div>
     </header>
   );

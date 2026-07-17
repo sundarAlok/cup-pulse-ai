@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
 import {
   getUserPoints,
   deductPoints,
@@ -7,19 +8,38 @@ import { simulateRewardClaim } from "@/lib/injective";
 
 export async function GET() {
   try {
-    const points = getUserPoints();
+    const cookieStore = await cookies();
+
+    const userId = Number(
+      cookieStore.get("userId")?.value
+    );
+
+    if (!userId) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Not authenticated",
+        },
+        { status: 401 }
+      );
+    }
+
+    const points = getUserPoints(userId);
 
     return NextResponse.json({
       success: true,
       points,
+      eligibleReward: Math.floor(points / 100),
+      rewardUnit: "Testnet USDT",
     });
   } catch (error) {
-    console.error(error);
+    console.error("Rewards GET Error:", error);
 
     return NextResponse.json(
       {
         success: false,
         points: 0,
+        eligibleReward: 0,
       },
       { status: 500 }
     );
@@ -28,22 +48,48 @@ export async function GET() {
 
 export async function POST() {
   try {
-    const points = getUserPoints();
+    const cookieStore = await cookies();
+
+    const userId = Number(
+      cookieStore.get("userId")?.value
+    );
+
+    if (!userId) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Not authenticated",
+        },
+        { status: 401 }
+      );
+    }
+
+    const points = getUserPoints(userId);
 
     const result =
       await simulateRewardClaim(points);
 
     if (!result.success) {
-      return NextResponse.json(result, {
-        status: 400,
-      });
+      return NextResponse.json(
+        result,
+        { status: 400 }
+      );
     }
 
-    deductPoints(100);
+    deductPoints(userId, 100);
 
-    return NextResponse.json(result);
+    const updatedPoints =
+      getUserPoints(userId);
+
+    return NextResponse.json({
+      ...result,
+      remainingPoints: updatedPoints,
+    });
   } catch (error) {
-    console.error(error);
+    console.error(
+      "Rewards POST Error:",
+      error
+    );
 
     return NextResponse.json(
       {
