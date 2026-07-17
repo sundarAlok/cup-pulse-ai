@@ -1,45 +1,67 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import Groq from "groq-sdk";
 
-const genAI = new GoogleGenerativeAI(
-  process.env.GEMINI_API_KEY!
-);
+const groq = new Groq({
+  apiKey: process.env.GROQ_API_KEY!,
+});
 
 export async function generatePrediction(
   question: string
 ) {
-  const model = genAI.getGenerativeModel({
-    model: "gemini-1.5-flash",
-  });
+  try {
+    const completion =
+      await groq.chat.completions.create({
+        model: "llama-3.3-70b-versatile",
+        temperature: 0.4,
+        messages: [
+          {
+            role: "system",
+            content: `
+You are a football prediction analyst.
 
-  const prompt = `
-You are a football prediction expert.
-
-Return ONLY valid JSON:
+Return ONLY valid JSON.
 
 {
-  "prediction": "",
-  "confidence": "",
-  "reason": ""
+  "prediction":"Team Name",
+  "confidence":"78%",
+  "reason":"Short football analysis."
 }
+`,
+          },
+          {
+            role: "user",
+            content: question,
+          },
+        ],
+      });
 
-Question:
-${question}
-`;
+    const text =
+      completion.choices[0]?.message?.content?.trim() ||
+      "";
 
-  const result = await model.generateContent(prompt);
-
-  const text =
-    result.response.text().replace(/```json/g, "")
+    const cleaned = text
+      .replace(/```json/g, "")
       .replace(/```/g, "")
       .trim();
 
-  try {
-    return JSON.parse(text);
-  } catch {
+    const parsed = JSON.parse(cleaned);
+
     return {
-      prediction: "Unknown",
-      confidence: "50%",
-      reason: "Unable to generate prediction.",
+      prediction:
+        parsed.prediction || "Unknown",
+      confidence:
+        parsed.confidence || "50%",
+      reason:
+        parsed.reason ||
+        "No analysis available.",
+    };
+  } catch (error) {
+    console.error("Groq Error:", error);
+
+    return {
+      prediction: "Unavailable",
+      confidence: "0%",
+      reason:
+        "Prediction service unavailable.",
     };
   }
 }

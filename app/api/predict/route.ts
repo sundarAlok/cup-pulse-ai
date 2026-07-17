@@ -3,19 +3,31 @@ import { generatePrediction } from "@/lib/ai";
 
 export async function POST(req: NextRequest) {
   try {
-    const { prompt } = await req.json();
+    const body = await req.json();
+    const prompt = body?.prompt?.trim();
 
-    const prediction = await generatePrediction(prompt);
+    if (!prompt) {
+      return NextResponse.json(
+        {
+          prediction: "Unavailable",
+          confidence: "0%",
+          reason: "Please enter a valid question.",
+        },
+        { status: 400 }
+      );
+    }
 
-    return NextResponse.json({
-      success: true,
-      prediction,
-    });
+    const result = await generatePrediction(prompt);
+
+    return NextResponse.json(result);
   } catch (error) {
+    console.error("Prediction API Error:", error);
+
     return NextResponse.json(
       {
-        success: false,
-        message: "Prediction failed",
+        prediction: "Unavailable",
+        confidence: "0%",
+        reason: "Prediction service temporarily unavailable.",
       },
       { status: 500 }
     );

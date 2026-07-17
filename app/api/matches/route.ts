@@ -7,13 +7,19 @@ export async function GET() {
 
     return NextResponse.json({
       success: true,
+      count: matches.length,
       matches,
     });
   } catch (error) {
+    console.error("Matches API Error:", error);
+
     return NextResponse.json(
       {
         success: false,
-        message: "Failed to fetch matches",
+        count: 0,
+        matches: [],
+        message:
+          "Unable to fetch World Cup matches.",
       },
       { status: 500 }
     );

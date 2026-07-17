@@ -4,42 +4,69 @@ import { useState } from "react";
 
 export default function RewardCard() {
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
   async function claimReward() {
-    const res = await fetch("/api/rewards", {
-      method: "POST",
-    });
+    try {
+      setLoading(true);
 
-    const data = await res.json();
+      const res = await fetch("/api/rewards", {
+        method: "POST",
+      });
 
-    setMessage(data.message);
+      const data = await res.json();
+
+      setMessage(data.message);
+    } catch {
+      setMessage("Reward claim failed.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
-    <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6">
-      <h2 className="text-2xl font-bold mb-6">
-        Reward Claim
-      </h2>
+    <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+      <div className="flex items-center justify-between">
+        <div>
+          <p className="text-sm text-slate-500">
+            Eligible Reward
+          </p>
 
-      <div className="mb-6">
-        <p className="text-zinc-400">
-          Eligible Reward
+          <h2 className="mt-2 text-4xl font-bold text-green-600">
+            10 USDC
+          </h2>
+        </div>
+
+        <div className="h-14 w-14 rounded-2xl bg-green-50 flex items-center justify-center">
+          <span className="text-2xl">💰</span>
+        </div>
+      </div>
+
+      <p className="mt-4 text-slate-500">
+        Claim your fan participation reward through the
+        Injective CCTP reward flow simulation.
+      </p>
+
+      <div className="mt-6 rounded-2xl bg-slate-50 p-4">
+        <p className="text-sm text-slate-600">
+          Reward Type
         </p>
 
-        <p className="text-4xl font-bold text-green-400 mt-2">
-          10 USDC
+        <p className="font-semibold text-slate-900">
+          Cross-Chain USDC (Demo)
         </p>
       </div>
 
       <button
         onClick={claimReward}
-        className="w-full bg-green-500 text-black font-semibold py-3 rounded-xl"
+        disabled={loading}
+        className="mt-6 w-full rounded-xl bg-green-600 py-3 font-semibold text-white transition hover:bg-green-700 disabled:opacity-50"
       >
-        Claim Reward
+        {loading ? "Claiming..." : "Claim Reward"}
       </button>
 
       {message && (
-        <div className="mt-4 text-green-400">
+        <div className="mt-4 rounded-xl border border-green-200 bg-green-50 p-4 text-green-700">
           {message}
         </div>
       )}

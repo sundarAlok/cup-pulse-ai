@@ -4,16 +4,26 @@ export async function simulateRewardClaim(
   if (points < 100) {
     return {
       success: false,
+      reward: null,
+      txHash: null,
+      pointsRequired: 100,
+      currentPoints: points,
       message:
-        "Minimum 100 points required.",
+        "You need at least 100 points to claim rewards.",
     };
   }
 
+  const rewardAmount = Math.floor(points / 100) * 10;
+
   return {
     success: true,
-    reward: "10 USDC",
-    txHash:
-      "injective-demo-" +
-      Math.random().toString(36).substring(2, 10),
+    reward: `${rewardAmount} USDC`,
+    txHash: `inj_${Math.random()
+      .toString(36)
+      .substring(2, 14)}`,
+    network: "Injective",
+    protocol: "CCTP Demo",
+    message:
+      "Reward successfully distributed through Injective CCTP simulation.",
   };
 }
