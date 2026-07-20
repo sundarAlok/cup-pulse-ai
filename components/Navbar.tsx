@@ -101,15 +101,7 @@ export default function Navbar() {
         <div className="hidden items-center gap-3 md:flex">
           {user ? (
             <>
-              <div className="rounded-xl border border-slate-200 bg-white px-4 py-2">
-                <p className="text-xs text-slate-500">
-                  {user.username}
-                </p>
 
-                <p className="font-bold text-blue-600">
-                  {user.points} pts
-                </p>
-              </div>
 
               <button
                 onClick={handleLogout}

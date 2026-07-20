@@ -1,193 +1,159 @@
 import Link from "next/link";
-import {
-  ArrowRight,
-  Brain,
-  Trophy,
-  Coins,
-  Zap,
-} from "lucide-react";
+import { ArrowRight, Trophy, Brain, Coins, Zap } from "lucide-react";
+import AnimatedBackground from "../components/AnimatedBackground";
+import Hero from "../components/Hero";
+import GlassCard from "../components/GlassCard";
 
 export default function HomePage() {
   return (
-    <div className="relative overflow-hidden">
-      {/* Background */}
-      <div className="absolute -top-40 -left-40 h-96 w-96 rounded-full bg-blue-200 blur-3xl opacity-40 animate-pulse" />
-      <div className="absolute top-40 -right-40 h-96 w-96 rounded-full bg-violet-200 blur-3xl opacity-40 animate-pulse" />
+    <div className="relative overflow-hidden pb-24">
+      <AnimatedBackground />
 
-      <div className="relative space-y-20">
-        {/* Hero */}
-        <section className="min-h-[80vh] flex flex-col items-center justify-center text-center">
-          <div className="rounded-full border border-blue-200 bg-white/80 backdrop-blur px-5 py-2 text-sm font-medium text-blue-600 shadow-sm">
-            ⚽ Injective Global Cup Hackathon
-          </div>
+      <main className="relative">
+        <Hero />
 
-          <h1 className="mt-8 text-7xl md:text-8xl font-black tracking-tight">
-            <span className="bg-gradient-to-r from-blue-600 via-violet-600 to-cyan-500 bg-clip-text text-transparent">
-              CupPulse AI
-            </span>
-          </h1>
+        <div className="max-w-7xl mx-auto w-full px-6 space-y-12">
+          {/* Live Match Intelligence */}
+          <section>
+            <h2 className="text-2xl font-semibold mb-4">Live Match Intelligence</h2>
+            <div className="grid gap-6 md:grid-cols-3">
+              <GlassCard>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="text-sm text-[var(--muted)]">Now</div>
+                    <div className="mt-2 text-lg font-bold">Argentina 1 — 0 Netherlands</div>
+                    <div className="mt-1 text-xs text-[var(--muted)]">62 • Lusail Iconic</div>
+                  </div>
 
-          <p className="mt-8 max-w-3xl text-xl leading-relaxed text-slate-600">
-            Real-time World Cup insights, AI-powered match
-            predictions, fan rewards, and Injective blockchain
-            experiences in one modern platform.
-          </p>
-
-          <div className="mt-10 flex flex-wrap justify-center gap-4">
-            <Link
-              href="/dashboard"
-              className="group flex items-center gap-2 rounded-2xl bg-gradient-to-r from-blue-600 to-violet-600 px-8 py-4 font-semibold text-white shadow-lg transition hover:scale-105"
-            >
-              Open Dashboard
-              <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
-            </Link>
-
-            <Link
-              href="/predictions"
-              className="rounded-2xl border border-slate-300 bg-white px-8 py-4 font-semibold text-slate-700 shadow-sm transition hover:scale-105 hover:bg-slate-50"
-            >
-              AI Predictions
-            </Link>
-          </div>
-
-          {/* Stats */}
-          <div className="mt-16 grid gap-5 md:grid-cols-4">
-            <div className="rounded-3xl bg-white/70 backdrop-blur border border-white p-6 shadow-md">
-              <h3 className="text-3xl font-bold text-blue-600">
-                AI
-              </h3>
-              <p className="mt-2 text-sm text-slate-500">
-                Match Predictions
-              </p>
-            </div>
-
-            <div className="rounded-3xl bg-white/70 backdrop-blur border border-white p-6 shadow-md">
-              <h3 className="text-3xl font-bold text-green-600">
-                Live
-              </h3>
-              <p className="mt-2 text-sm text-slate-500">
-                World Cup Matches
-              </p>
-            </div>
-
-            <div className="rounded-3xl bg-white/70 backdrop-blur border border-white p-6 shadow-md">
-              <h3 className="text-3xl font-bold text-violet-600">
-                USDT
-              </h3>
-              <p className="mt-2 text-sm text-slate-500">
-                Fan Rewards
-              </p>
-            </div>
-
-            <div className="rounded-3xl bg-white/70 backdrop-blur border border-white p-6 shadow-md">
-              <h3 className="text-3xl font-bold text-cyan-600">
-                Web3
-              </h3>
-              <p className="mt-2 text-sm text-slate-500">
-                Injective Powered
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* Features */}
-        <section>
-          <div className="text-center mb-10">
-            <h2 className="text-4xl font-bold text-slate-900">
-              Platform Features
-            </h2>
-
-            <p className="mt-3 text-slate-500">
-              Everything fans need during the World Cup.
-            </p>
-          </div>
-
-          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
-            <div className="group rounded-3xl bg-white border border-slate-200 p-8 shadow-sm transition hover:-translate-y-2 hover:shadow-xl">
-              <Trophy className="h-10 w-10 text-blue-600" />
-
-              <h3 className="mt-5 text-xl font-bold">
-                Live Matches
-              </h3>
-
-              <p className="mt-3 text-slate-500">
-                Track live scores, upcoming fixtures, and completed matches.
-              </p>
-            </div>
-
-            <div className="group rounded-3xl bg-white border border-slate-200 p-8 shadow-sm transition hover:-translate-y-2 hover:shadow-xl">
-              <Brain className="h-10 w-10 text-violet-600" />
-
-              <h3 className="mt-5 text-xl font-bold">
-                AI Predictions
-              </h3>
-
-              <p className="mt-3 text-slate-500">
-                Get winner predictions, confidence scores, and reasoning.
-              </p>
-            </div>
-
-            <div className="group rounded-3xl bg-white border border-slate-200 p-8 shadow-sm transition hover:-translate-y-2 hover:shadow-xl">
-              <Coins className="h-10 w-10 text-green-600" />
-
-              <h3 className="mt-5 text-xl font-bold">
-                Fan Rewards
-              </h3>
-
-              <p className="mt-3 text-slate-500">
-                Earn points from participation and accurate predictions.
-              </p>
-            </div>
-
-            <div className="group rounded-3xl bg-white border border-slate-200 p-8 shadow-sm transition hover:-translate-y-2 hover:shadow-xl">
-              <Zap className="h-10 w-10 text-cyan-600" />
-
-              <h3 className="mt-5 text-xl font-bold">
-                Injective Tech
-              </h3>
-
-              <p className="mt-3 text-slate-500">
-                MCP, Agent Skills, x402 and CCTP integrations.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* Workflow */}
-        <section className="rounded-[32px] border border-slate-200 bg-white p-10 shadow-sm">
-          <div className="text-center">
-            <h2 className="text-4xl font-bold text-slate-900">
-              How CupPulse AI Works
-            </h2>
-
-            <p className="mt-3 text-slate-500">
-              Simple, engaging, and rewarding.
-            </p>
-          </div>
-
-          <div className="mt-12 grid gap-8 md:grid-cols-4">
-            {[
-              "Browse Matches",
-              "Make Predictions",
-              "Earn Fan Points",
-              "Claim Rewards",
-            ].map((step, index) => (
-              <div
-                key={step}
-                className="text-center"
-              >
-                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-r from-blue-600 to-violet-600 text-lg font-bold text-white">
-                  {index + 1}
+                  <div className="text-right">
+                    <div className="text-sm text-[var(--muted)]">AI Prob</div>
+                    <div className="mt-2 text-2xl font-extrabold">71%</div>
+                  </div>
                 </div>
+              </GlassCard>
 
-                <h3 className="mt-5 font-bold">
-                  {step}
-                </h3>
+              <GlassCard>
+                <div className="text-sm text-[var(--muted)]">Upcoming</div>
+                <div className="mt-2 font-bold">France vs Brazil</div>
+                <div className="mt-1 text-xs text-[var(--muted)]">Starts in 4h</div>
+              </GlassCard>
+
+              <GlassCard>
+                <div className="text-sm text-[var(--muted)]">Summary</div>
+                <div className="mt-2">Top momentum: Brazil • Highest xG: France</div>
+              </GlassCard>
+            </div>
+          </section>
+
+          {/* Tournament Intelligence Graph (placeholder) */}
+          <section>
+            <h2 className="text-2xl font-semibold mb-4">Tournament Intelligence</h2>
+            <GlassCard className="h-72 flex items-center justify-center">
+              <div className="text-center text-[var(--muted)]">
+                <div className="mb-2 font-semibold">Interactive Bracket & Graph (coming soon)</div>
+                <div className="text-sm">Tournament Intelligence Graph will be added in Phase 2.</div>
               </div>
-            ))}
-          </div>
-        </section>
-      </div>
+            </GlassCard>
+          </section>
+
+          {/* AI Prediction Center */}
+          <section>
+            <h2 className="text-2xl font-semibold mb-4">AI Prediction Center</h2>
+            <div className="grid gap-6 md:grid-cols-3">
+              <GlassCard>
+                <div className="text-sm text-[var(--muted)]">Next Match Prediction</div>
+                <div className="mt-2 font-bold">Spain vs Germany</div>
+                <div className="mt-1 text-xs text-[var(--muted)]">AI: Spain 54% • Confidence: 68%</div>
+              </GlassCard>
+
+              <GlassCard>
+                <div className="text-sm text-[var(--muted)]">Top Predictions</div>
+                <ul className="mt-2 text-sm">
+                  <li>Brazil to win group • 62%</li>
+                  <li>England upset vs France • 22%</li>
+                </ul>
+              </GlassCard>
+
+              <GlassCard>
+                <div className="text-sm text-[var(--muted)]">Model Insights</div>
+                <div className="mt-2 text-sm">Feature importance: form, xG, injuries, travel fatigue.</div>
+              </GlassCard>
+            </div>
+          </section>
+
+          {/* Tournament Simulator CTA */}
+          <section>
+            <GlassCard className="flex items-center justify-between gap-6">
+              <div>
+                <h3 className="text-xl font-bold">Tournament Simulator</h3>
+                <p className="mt-2 text-sm text-[var(--muted)]">Run AI-driven tournament simulations to estimate probabilities and outcomes.</p>
+              </div>
+
+              <div className="ml-auto flex gap-3">
+                <Link href="/simulator" className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[var(--primary-1)] to-[var(--primary-2)] px-5 py-2 font-semibold text-black">
+                  Open Simulator
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+              </div>
+            </GlassCard>
+          </section>
+
+          {/* Top Teams Analytics */}
+          <section>
+            <h2 className="text-2xl font-semibold mb-4">Top Teams Analytics</h2>
+            <div className="grid gap-6 md:grid-cols-4">
+              {[
+                { name: "Brazil", stat: "Attack 88" },
+                { name: "France", stat: "Defense 85" },
+                { name: "Argentina", stat: "Form 82" },
+                { name: "England", stat: "Depth 80" },
+              ].map((t) => (
+                <GlassCard key={t.name} className="text-center">
+                  <div className="text-sm text-[var(--muted)]">{t.name}</div>
+                  <div className="mt-2 font-bold">{t.stat}</div>
+                </GlassCard>
+              ))}
+            </div>
+          </section>
+
+          {/* Fan Rewards Section */}
+          <section>
+            <h2 className="text-2xl font-semibold mb-4">Fan Rewards</h2>
+            <div className="grid gap-6 md:grid-cols-3">
+              <GlassCard>
+                <div className="text-sm text-[var(--muted)]">Your Points</div>
+                <div className="mt-2 text-3xl font-extrabold">1,240</div>
+                <div className="mt-2 text-xs text-[var(--muted)]">Keep predicting to earn more rewards.</div>
+              </GlassCard>
+
+              <GlassCard>
+                <div className="text-sm text-[var(--muted)]">Top Rewards</div>
+                <ul className="mt-2 text-sm">
+                  <li>Merch Pack • 5000 pts</li>
+                  <li>VIP Experience • 25000 pts</li>
+                </ul>
+              </GlassCard>
+
+              <GlassCard>
+                <div className="text-sm text-[var(--muted)]">Connect Wallet</div>
+                <div className="mt-2 text-sm">Link your Injective wallet to claim on-chain rewards.</div>
+              </GlassCard>
+            </div>
+          </section>
+
+          {/* Footer */}
+          <footer className="mt-6 text-sm text-[var(--muted)]">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+              <div>© {new Date().getFullYear()} CupPulse AI</div>
+              <div className="flex gap-4">
+                <Link href="/about" className="hover:underline">About</Link>
+                <Link href="/privacy" className="hover:underline">Privacy</Link>
+                <Link href="/terms" className="hover:underline">Terms</Link>
+              </div>
+            </div>
+          </footer>
+        </div>
+      </main>
     </div>
   );
 }
