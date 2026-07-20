@@ -16,9 +16,9 @@ export default function Hero() {
     <section className="relative min-h-[70vh] flex items-center overflow-hidden pt-10 pb-40">
       {/* Background Glow */}
       <div className="absolute inset-0 -z-10">
-        <div className="absolute left-1/2 top-0 h-[450px] w-[450px] -translate-x-1/2 rounded-full bg-cyan-200/30 blur-[120px]" />
-        <div className="absolute -left-24 top-24 h-[300px] w-[300px] rounded-full bg-blue-200/20 blur-[100px]" />
-        <div className="absolute -right-24 top-24 h-[300px] w-[300px] rounded-full bg-violet-200/20 blur-[100px]" />
+        <div className="absolute left-1/2 top-0 h-[112.5px] w-[112.5px] -translate-x-1/2 rounded-full bg-cyan-200/30 blur-[30px]" />
+        <div className="absolute -left-24 top-24 h-[75px] w-[75px] rounded-full bg-blue-200/20 blur-[25px]" />
+        <div className="absolute -right-24 top-24 h-[75px] w-[75px] rounded-full bg-violet-200/20 blur-[25px]" />
       </div>
 
       <div className="max-w-7xl mx-auto w-full px-6">
