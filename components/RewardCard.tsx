@@ -21,34 +21,27 @@ export default function RewardCard() {
   };
 
   useEffect(() => {
-  const fetchPoints = async () => {
-    try {
-      const res = await fetch("/api/rewards");
-      const data = await res.json();
+    let cancelled = false;
 
-      if (data.success) {
-        setPoints(data.points);
+    const initializePoints = async () => {
+      try {
+        const res = await fetch("/api/rewards");
+        const data = await res.json();
+
+        if (!cancelled && data.success) {
+          setPoints(data.points);
+        }
+      } catch (error) {
+        console.error(error);
       }
-    } catch (error) {
-      console.error(error);
-    }
-  };
+    };
 
-  void fetchPoints();
-}, []);
+    void initializePoints();
 
-const refreshPoints = async () => {
-  try {
-    const res = await fetch("/api/rewards");
-    const data = await res.json();
-
-    if (data.success) {
-      setPoints(data.points);
-    }
-  } catch (error) {
-    console.error(error);
-  }
-};
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const claimReward = async () => {
     try {

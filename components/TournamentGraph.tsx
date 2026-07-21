@@ -4,7 +4,9 @@ import React, { useCallback, useState } from "react";
 import ReactFlow, {
   Background,
   Controls,
+  Handle,
   MiniMap,
+  Position,
   ReactFlowProvider,
   useEdgesState,
   useNodesState,
@@ -14,6 +16,7 @@ import ReactFlow, {
   Edge,
 } from "reactflow";
 import "reactflow/dist/style.css";
+import type { TeamAnalyticsData } from "./TeamAnalyticsPanel";
 
 type TournamentNodeData = {
   title: string;
@@ -175,7 +178,8 @@ const initialEdges: Edge[] = [
 
 const TeamNode = ({ data }: { data: TournamentNodeData }) => {
   return (
-    <div className="rounded-3xl border border-slate-200 bg-white/95 p-4 shadow-sm">
+    <div className="relative rounded-3xl border border-slate-200 bg-white/95 p-4 shadow-sm">
+      <Handle type="source" position={Position.Right} className="!bg-slate-400" />
       <div className="text-[11px] uppercase tracking-[0.24em] text-slate-500">{data.typeLabel}</div>
       <div className="mt-2 text-lg font-semibold text-slate-900">{data.title}</div>
       <div className="mt-1 text-sm text-slate-500">{data.subtitle}</div>
@@ -187,7 +191,9 @@ const TeamNode = ({ data }: { data: TournamentNodeData }) => {
 
 const MatchNode = ({ data }: { data: TournamentNodeData }) => {
   return (
-    <div className="rounded-3xl border border-slate-200 bg-slate-50 p-4 shadow-sm">
+    <div className="relative rounded-3xl border border-slate-200 bg-slate-50 p-4 shadow-sm">
+      <Handle type="target" position={Position.Left} className="!bg-slate-400" />
+      <Handle type="source" position={Position.Right} className="!bg-slate-400" />
       <div className="text-[11px] uppercase tracking-[0.24em] text-slate-500">{data.typeLabel}</div>
       <div className="mt-2 text-lg font-semibold text-slate-900">{data.title}</div>
       <div className="mt-1 text-sm text-slate-500">{data.subtitle}</div>
@@ -199,7 +205,9 @@ const MatchNode = ({ data }: { data: TournamentNodeData }) => {
 
 const RoundNode = ({ data }: { data: TournamentNodeData }) => {
   return (
-    <div className="rounded-[2rem] border border-slate-200 bg-cyan-50/80 p-4 shadow-sm">
+    <div className="relative rounded-[2rem] border border-slate-200 bg-cyan-50/80 p-4 shadow-sm">
+      <Handle type="target" position={Position.Left} className="!bg-slate-400" />
+      <Handle type="source" position={Position.Right} className="!bg-slate-400" />
       <div className="text-[11px] uppercase tracking-[0.24em] text-cyan-700">{data.typeLabel}</div>
       <div className="mt-2 text-lg font-semibold text-slate-900">{data.title}</div>
       <div className="mt-1 text-sm text-slate-500">{data.subtitle}</div>
@@ -214,18 +222,75 @@ const nodeTypes = {
   roundNode: RoundNode,
 };
 
-export default function TournamentGraph() {
+type TournamentGraphProps = {
+  onTeamSelect?: (team: TeamAnalyticsData | null) => void;
+};
+
+const teamDataMap: Record<string, TeamAnalyticsData> = {
+  Brazil: {
+    name: "Brazil",
+    ranking: "#1",
+    attack: "91",
+    defense: "88",
+    form: "91",
+    probability: "76%",
+    xg: "2.84",
+    recent: ["W 3-1 vs France", "W 2-0 vs Argentina", "W 1-0 vs England"],
+    summary: "Brazil is the top contender with elite attack and strong possession control."
+  },
+  France: {
+    name: "France",
+    ranking: "#2",
+    attack: "89",
+    defense: "86",
+    form: "88",
+    probability: "68%",
+    xg: "2.45",
+    recent: ["W 2-1 vs England", "W 4-1 vs Spain", "L 1-2 vs Brazil"],
+    summary: "France relies on fast transitions and clinical finishing from its attacking core."
+  },
+  Argentina: {
+    name: "Argentina",
+    ranking: "#3",
+    attack: "90",
+    defense: "84",
+    form: "90",
+    probability: "72%",
+    xg: "2.72",
+    recent: ["W 3-0 vs England", "W 2-1 vs Germany", "D 1-1 vs Spain"],
+    summary: "Argentina combines strong offensive chemistry with dependable midfield control."
+  },
+  England: {
+    name: "England",
+    ranking: "#4",
+    attack: "86",
+    defense: "83",
+    form: "84",
+    probability: "60%",
+    xg: "2.18",
+    recent: ["W 1-0 vs Portugal", "L 0-1 vs France", "W 2-1 vs Brazil"],
+    summary: "England has a balanced squad with tactical discipline and strong set-piece danger."
+  },
+};
+
+export default function TournamentGraph({ onTeamSelect }: TournamentGraphProps) {
   const [selected, setSelected] = useState<TournamentNodeData | null>(null);
   const [nodes, , onNodesChange] = useNodesState(initialNodes);
   const [edges, , onEdgesChange] = useEdgesState(initialEdges);
 
   const onNodeClick = useCallback((_: React.MouseEvent, node: Node<TournamentNodeData>) => {
     setSelected(node.data);
-  }, []);
+    if (node.type === "teamNode" && node.data.title in teamDataMap) {
+      onTeamSelect?.(teamDataMap[node.data.title]);
+    } else {
+      onTeamSelect?.(null);
+    }
+  }, [onTeamSelect]);
 
   const onPaneClick = useCallback(() => {
     setSelected(null);
-  }, []);
+    onTeamSelect?.(null);
+  }, [onTeamSelect]);
 
   return (
     <div className="rounded-[2rem] border border-slate-200 bg-white/90 p-5 shadow-xl shadow-slate-200/30">

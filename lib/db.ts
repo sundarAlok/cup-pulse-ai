@@ -25,6 +25,7 @@ export type User = {
   points: number;
 };
 
+
 export function getUserById(
   id: number
 ): User | undefined {
