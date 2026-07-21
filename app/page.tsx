@@ -59,16 +59,35 @@ export default function HomePage() {
 
           {/* Tournament Simulator CTA */}
           <section>
-            <GlassCard className="flex items-center justify-between gap-6">
-              <div>
-                <h3 className="text-xl font-bold">Tournament Simulator</h3>
-                <p className="mt-2 text-sm text-[var(--muted)]">Run AI-driven tournament simulations to estimate probabilities and outcomes.</p>
+            <GlassCard className="grid gap-6 md:grid-cols-[1.3fr_0.9fr] items-stretch p-8">
+              <div className="space-y-4">
+                <div className="flex items-center gap-3 rounded-3xl bg-slate-100 px-4 py-3 text-sm font-semibold text-slate-800 shadow-sm">
+                  <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-400 to-blue-600 text-white text-lg">⚡</span>
+                  <span>AI-driven tournament simulation</span>
+                </div>
+
+                <h3 className="text-3xl font-semibold text-slate-900">Tournament Simulator</h3>
+                <p className="max-w-xl text-base leading-7 text-slate-600">Run AI-powered tournament models, compare likely champions, and explore bracket probability in one fast simulation workflow.</p>
               </div>
 
-              <div className="ml-auto flex gap-3">
-                <Link href="/simulator" className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[var(--primary-1)] to-[var(--primary-2)] px-5 py-2 font-semibold text-black">
+              <div className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm">
+                <div className="space-y-4">
+                  <div className="rounded-3xl bg-slate-50 p-4">
+                    <p className="text-xs uppercase tracking-[0.24em] text-slate-500">Reality score</p>
+                    <p className="mt-2 text-3xl font-semibold text-slate-900">94%</p>
+                    <p className="mt-2 text-sm text-slate-600">AI prediction alignment across tournament models.</p>
+                  </div>
+
+                  <div className="rounded-3xl bg-slate-50 p-4">
+                    <p className="text-xs uppercase tracking-[0.24em] text-slate-500">Champion odds</p>
+                    <p className="mt-2 text-3xl font-semibold text-slate-900">Brazil</p>
+                    <p className="mt-2 text-sm text-slate-600">Current favorite in model runs.</p>
+                  </div>
+                </div>
+
+                <Link href="/simulator" className="mt-6 inline-flex w-full items-center justify-center rounded-full bg-slate-900 px-6 py-3 text-base font-semibold text-white transition hover:bg-slate-800">
                   Open Simulator
-                  <ArrowRight className="w-4 h-4" />
+                  <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </div>
             </GlassCard>
