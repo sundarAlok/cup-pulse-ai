@@ -66,7 +66,6 @@ type SimulationCounts = ReturnType<typeof initializeCounts>;
 type BracketResult = ReturnType<typeof runBracket>;
 
 export default function SimulatorPage() {
-  const [runCount, setRunCount] = useState(1);
   const [isRunning, setIsRunning] = useState(false);
   const [counts, setCounts] = useState<SimulationCounts>(initializeCounts());
   const [latestBracket, setLatestBracket] = useState<BracketResult | null>(null);
@@ -91,7 +90,6 @@ export default function SimulatorPage() {
     setCounts(nextCounts);
     setSimulations(batchSize);
     setLatestBracket(bracket);
-    setRunCount(batchSize);
     setIsRunning(false);
   };
 

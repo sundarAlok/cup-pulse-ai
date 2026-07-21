@@ -1,13 +1,30 @@
 import Groq from "groq-sdk";
 
-const groq = new Groq({
-  apiKey: process.env.GROQ_API_KEY!,
-});
+if (typeof process.loadEnvFile === "function") {
+  try {
+    process.loadEnvFile(".env.local");
+  } catch {
+    // Ignore env file issues and fall back to the existing process environment.
+  }
+}
+
+function getGroqClient() {
+  const apiKey = process.env.GROQ_API_KEY?.trim();
+
+  if (!apiKey) {
+    throw new Error(
+      "GROQ_API_KEY is missing. Set it in your environment or in .env.local."
+    );
+  }
+
+  return new Groq({ apiKey });
+}
 
 export async function generatePrediction(
   question: string
 ) {
   try {
+    const groq = getGroqClient();
     const completion =
       await groq.chat.completions.create({
         model: "llama-3.3-70b-versatile",

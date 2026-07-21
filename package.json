@@ -6,11 +6,13 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "mcp:server": "tsx mcp/server.ts"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
     "@injectivelabs/sdk-ts": "^1.20.25",
+    "@modelcontextprotocol/sdk": "^1.29.0",
     "axios": "^1.18.1",
     "better-sqlite3": "^12.11.1",
     "clsx": "^2.1.1",
@@ -22,7 +24,8 @@
     "react-dom": "19.2.4",
     "reactflow": "^11.11.4",
     "sqlite3": "^6.0.1",
-    "tailwind-merge": "^3.6.0"
+    "tailwind-merge": "^3.6.0",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
@@ -33,6 +36,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.2.10",
     "tailwindcss": "^4",
+    "tsx": "^4.20.4",
     "typescript": "^5"
   }
 }
