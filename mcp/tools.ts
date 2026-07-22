@@ -22,15 +22,15 @@ import {
   teamStatsInputSchema,
 } from "./schemas";
 
-type ToolDefinition<TArgs extends Record<string, unknown> = Record<string, never>> = {
+type ToolDefinition = {
   name: string;
   description: string;
   inputSchema: Record<string, unknown>;
-  schema: ZodType<TArgs>;
-  handler: (args: TArgs) => Promise<unknown> | unknown;
+  schema: ZodType<Record<string, unknown>>;
+  handler: (args: Record<string, unknown>) => Promise<unknown> | unknown;
 };
 
-export const tools: ToolDefinition<Record<string, unknown>>[] = [
+export const tools: ToolDefinition[] = [
   {
     name: "getMatches",
     description: "Get recent World Cup matches.",
@@ -70,7 +70,8 @@ export const tools: ToolDefinition<Record<string, unknown>>[] = [
     description: "Get team intelligence and current form details.",
     inputSchema: teamStatsInputSchema,
     schema: getTeamStatsSchema,
-    handler: async ({ team }: { team: string }) => {
+    handler: async (args) => {
+      const { team } = args as { team: string };
       const stats = await getTeamStats(team);
       return {
         content: [
@@ -87,7 +88,8 @@ export const tools: ToolDefinition<Record<string, unknown>>[] = [
     description: "Predict the winner of a match between two teams.",
     inputSchema: predictionInputSchema,
     schema: predictMatchSchema,
-    handler: async ({ team1, team2 }: { team1: string; team2: string }) => {
+    handler: async (args) => {
+      const { team1, team2 } = args as { team1: string; team2: string };
       const result = await predictMatch(team1, team2);
       return {
         content: [
@@ -104,7 +106,8 @@ export const tools: ToolDefinition<Record<string, unknown>>[] = [
     description: "Simulate a tournament and return champion probabilities.",
     inputSchema: simulationInputSchema,
     schema: simulateTournamentSchema,
-    handler: async ({ runs }: { runs: number }) => {
+    handler: async (args) => {
+      const { runs } = args as { runs: number };
       const result = simulateTournament(runs);
       return {
         content: [
