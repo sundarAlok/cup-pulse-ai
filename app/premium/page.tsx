@@ -42,7 +42,9 @@ export default function PremiumPage() {
   const [hasPremium, setHasPremium] = useState(false);
   const [report, setReport] = useState<PremiumReport | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [statusMessage, setStatusMessage] = useState("Connect your Injective wallet to unlock the premium scouting report.");
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState<{ id: number; username: string; points: number } | null>(null);
+  const [statusMessage, setStatusMessage] = useState("Checking login state...");
 
   function saveWalletData(wallet: string, hash?: string) {
     if (typeof window === "undefined") {
@@ -68,6 +70,11 @@ export default function PremiumPage() {
 
   const connectWallet = async () => {
     if (typeof window === "undefined") {
+      return;
+    }
+
+    if (!isAuthenticated) {
+      setError("Please login before using premium features.");
       return;
     }
 
@@ -138,6 +145,37 @@ export default function PremiumPage() {
       return;
     }
 
+    const loadAuth = async () => {
+      try {
+        const response = await fetch("/api/me");
+        const data = await response.json();
+
+        if (data.authenticated) {
+          setIsAuthenticated(true);
+          setUser(data.user);
+          setStatusMessage("Logged in. Connect your wallet to start premium unlock.");
+          return;
+        }
+
+        setIsAuthenticated(false);
+        setUser(null);
+        setStatusMessage("Please login to access premium features.");
+      } catch (err) {
+        console.error("Failed to verify auth:", err);
+        setIsAuthenticated(false);
+        setUser(null);
+        setStatusMessage("Please login to access premium features.");
+      }
+    };
+
+    void loadAuth();
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined" || !isAuthenticated) {
+      return;
+    }
+
     const timeoutId = window.setTimeout(async () => {
       const storedWalletAddress = window.localStorage.getItem("premiumWalletAddress") ?? "";
       const storedTxHash = window.localStorage.getItem("premiumTxHash") ?? "";
@@ -177,10 +215,14 @@ export default function PremiumPage() {
     }, 0);
 
     return () => window.clearTimeout(timeoutId);
-  }, []);
+  }, [isAuthenticated]);
 
   const fetchPremiumReport = async (wallet: string) => {
     try {
+      if (!isAuthenticated) {
+        throw new Error("Please login before accessing premium features.");
+      }
+
       setError(null);
       setIsLoading(true);
       setStatusMessage("Loading your premium report...");
@@ -207,6 +249,11 @@ export default function PremiumPage() {
   };
 
   const unlockReport = async () => {
+    if (!isAuthenticated) {
+      setError("Please login before using premium features.");
+      return;
+    }
+
     if (!walletAddress.trim()) {
       setError("Connect a wallet address before paying.");
       return;
@@ -345,7 +392,7 @@ export default function PremiumPage() {
                 className="mt-3 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 outline-none"
               />
               <div className="mt-4 flex flex-wrap items-center gap-3">
-                <button type="button" onClick={connectWallet} disabled={isLoading} className="rounded-full bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60">
+                <button type="button" onClick={connectWallet} disabled={isLoading || !isAuthenticated} className="rounded-full bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60">
                   {isConnected ? "Wallet Connected" : "Connect Wallet"}
                 </button>
                 <button
@@ -369,6 +416,7 @@ export default function PremiumPage() {
                   }}
                   disabled={
                     isLoading ||
+                    !isAuthenticated ||
                     !walletAddress.trim() ||
                     (hasPremium && !!report)
                   }
@@ -392,6 +440,11 @@ export default function PremiumPage() {
               </ul>
               <div className="mt-4 rounded-2xl border border-cyan-200 bg-cyan-50 p-3 text-sm text-cyan-800">
                 {statusMessage}
+                {!isAuthenticated ? (
+                  <p className="mt-2 text-xs text-slate-600">
+                    Login first to enable premium wallet payment.
+                  </p>
+                ) : null}
               </div>
               {txHash ? <div className="mt-3 text-xs text-slate-500">Tx hash: {txHash}</div> : null}
             </div>
