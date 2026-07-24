@@ -28,50 +28,50 @@ export function buildPremiumReport(): PremiumReport {
     title: "Premium World Cup Intelligence Report",
     unlockFeeUsd: 0.25,
     summary:
-      "A premium-ready scouting package for advanced football intelligence, combining tactical patterns, simulation outlooks, and matchup-specific risk signals.",
+      "A premium-ready scouting package for advanced football intelligence, combining tactical patterns, simulation outlooks, and matchup-specific risk signals from the completed tournament.",
     scouting: [
       {
-        team: "Brazil",
-        headline: "High press conditioning",
-        signal: "Strong",
-        detail: "Brazil's fullbacks are repeatedly joining the attack in the final third, creating overloads that punish narrow defences.",
+        team: "Spain",
+        headline: "Midfield mastery unlocked the final",
+        signal: "Dominant",
+        detail: "Spain's midfield structure controlled tempo and limited Argentina's ability to build through the center.",
       },
       {
         team: "Argentina",
-        headline: "Midfield control creates turnovers",
+        headline: "Pressure remained relentless",
         signal: "Strong",
-        detail: "Argentina's central midfield wins the second ball repeatedly, giving them a high-value transition advantage.",
+        detail: "Argentina kept the final tense with sustained counter-pressing sequences, earning high-value chances despite the narrow defeat.",
       },
       {
-        team: "England",
-        headline: "Set-piece threat remains elevated",
+        team: "France",
+        headline: "Resolved transition risk",
         signal: "Medium",
-        detail: "England's aerial win rate from dead-ball situations is above tournament average and can swing tight knockout games.",
+        detail: "France's defensive shape stabilized after early pressure, but they were ultimately edged by Spain's pace in wide areas.",
       },
     ],
     tacticalAnalysis: [
       {
-        title: "Counter-press strategy",
-        detail: "The most efficient teams in this field force a turnover inside the first 10 seconds after losing possession.",
+        title: "Midfield balance pays off",
+        detail: "Maintaining connection between defense and attack allowed Spain to control possession and force Argentina into rushed decisions.",
       },
       {
-        title: "Expected goals variance",
-        detail: "Teams with a low possession share but high shot quality are creating a hidden edge in the knockout stage.",
+        title: "Transition value vs. sustained pressure",
+        detail: "The final demonstrated that timed counter-attacks can overcome even the most disciplined defensive units when space is found early.",
       },
     ],
     simulationSummary: {
-      favorite: "Brazil",
-      upsetChance: "24%",
-      confidence: "91%",
+      favorite: "Spain",
+      upsetChance: "18%",
+      confidence: "93%",
     },
     matchBreakdown: [
       {
-        fixture: "Brazil vs France",
-        insight: "Brazil's transition volume makes them slightly more resilient in high-pressure fixtures.",
+        fixture: "Spain vs Argentina",
+        insight: "Spain's high pressing and wide overloads created the decisive edge in the final stages.",
       },
       {
-        fixture: "Argentina vs England",
-        insight: "A single set-piece swing could decide the result in a tightly balanced matchup.",
+        fixture: "Spain vs France",
+        insight: "Spain's control of transitional pace limited France's counter-attacking threat.",
       },
     ],
   };

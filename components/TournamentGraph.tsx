@@ -33,11 +33,11 @@ const initialNodes: Node<TournamentNodeData>[] = [
     type: "teamNode",
     position: { x: 0, y: 20 },
     data: {
-      title: "Brazil",
-      subtitle: "Rank #1",
-      info: "Form 91",
+      title: "Spain",
+      subtitle: "Champion",
+      info: "Final 2-1",
       typeLabel: "Team",
-      metric: "Win Prob 76%",
+      metric: "Top Performer",
     },
   },
   {
@@ -45,11 +45,11 @@ const initialNodes: Node<TournamentNodeData>[] = [
     type: "teamNode",
     position: { x: 0, y: 200 },
     data: {
-      title: "France",
-      subtitle: "Rank #2",
-      info: "Form 88",
+      title: "Argentina",
+      subtitle: "Runner-up",
+      info: "Final 1-2",
       typeLabel: "Team",
-      metric: "Win Prob 68%",
+      metric: "Strong Pressure",
     },
   },
   {
@@ -57,10 +57,10 @@ const initialNodes: Node<TournamentNodeData>[] = [
     type: "matchNode",
     position: { x: 260, y: 100 },
     data: {
-      title: "Brazil vs France",
-      subtitle: "QF 1",
-      info: "Pred: Brazil 62%",
-      confidence: "Confidence 82%",
+      title: "Spain vs Argentina",
+      subtitle: "Final",
+      info: "Result: Spain 2-1",
+      confidence: "Match-winner: Spain",
       typeLabel: "Match",
     },
   },
@@ -69,11 +69,11 @@ const initialNodes: Node<TournamentNodeData>[] = [
     type: "teamNode",
     position: { x: 0, y: 380 },
     data: {
-      title: "Argentina",
-      subtitle: "Rank #3",
-      info: "Form 90",
+      title: "France",
+      subtitle: "Semi-finalist",
+      info: "Top 4",
       typeLabel: "Team",
-      metric: "Win Prob 72%",
+      metric: "Elite Attack",
     },
   },
   {
@@ -81,11 +81,11 @@ const initialNodes: Node<TournamentNodeData>[] = [
     type: "teamNode",
     position: { x: 0, y: 560 },
     data: {
-      title: "England",
-      subtitle: "Rank #4",
-      info: "Form 84",
+      title: "Brazil",
+      subtitle: "Semi-finalist",
+      info: "Top 4",
       typeLabel: "Team",
-      metric: "Win Prob 60%",
+      metric: "High Pressure",
     },
   },
   {
@@ -93,10 +93,10 @@ const initialNodes: Node<TournamentNodeData>[] = [
     type: "matchNode",
     position: { x: 260, y: 460 },
     data: {
-      title: "Argentina vs England",
-      subtitle: "QF 2",
-      info: "Pred: Argentina 69%",
-      confidence: "Confidence 79%",
+      title: "France vs Brazil",
+      subtitle: "Semi-final",
+      info: "Result: France 1-0",
+      confidence: "France prevailed",
       typeLabel: "Match",
     },
   },
@@ -107,7 +107,7 @@ const initialNodes: Node<TournamentNodeData>[] = [
     data: {
       title: "Semi Final",
       subtitle: "Moving to next stage",
-      info: "Projected: Brazil vs Argentina",
+      info: "Spain and Argentina advanced to the final.",
       typeLabel: "Round",
     },
   },
@@ -118,7 +118,7 @@ const initialNodes: Node<TournamentNodeData>[] = [
     data: {
       title: "Final",
       subtitle: "Champion path",
-      info: "Top candidates: Brazil",
+      info: "Spain earned the title with a 2-1 final win.",
       typeLabel: "Round",
     },
   },
@@ -227,49 +227,49 @@ type TournamentGraphProps = {
 };
 
 const teamDataMap: Record<string, TeamAnalyticsData> = {
-  Brazil: {
-    name: "Brazil",
+  Spain: {
+    name: "Spain",
     ranking: "#1",
-    attack: "91",
-    defense: "88",
-    form: "91",
-    probability: "76%",
-    xg: "2.84",
-    recent: ["W 3-1 vs France", "W 2-0 vs Argentina", "W 1-0 vs England"],
-    summary: "Brazil is the top contender with elite attack and strong possession control."
-  },
-  France: {
-    name: "France",
-    ranking: "#2",
-    attack: "89",
-    defense: "86",
-    form: "88",
-    probability: "68%",
-    xg: "2.45",
-    recent: ["W 2-1 vs England", "W 4-1 vs Spain", "L 1-2 vs Brazil"],
-    summary: "France relies on fast transitions and clinical finishing from its attacking core."
+    attack: "92",
+    defense: "89",
+    form: "98",
+    probability: "100%",
+    xg: "2.55",
+    recent: ["W 2-1 vs Argentina", "W 3-1 vs France", "W 2-0 vs Germany"],
+    summary: "Spain closed the tournament with a commanding midfield display and elite transition efficiency."
   },
   Argentina: {
     name: "Argentina",
+    ranking: "#2",
+    attack: "91",
+    defense: "86",
+    form: "96",
+    probability: "92%",
+    xg: "2.33",
+    recent: ["L 1-2 vs Spain", "W 2-1 vs England", "W 3-0 vs Mexico"],
+    summary: "Argentina finished runner-up with relentless pressure and surgical counter-attacks."
+  },
+  France: {
+    name: "France",
     ranking: "#3",
     attack: "90",
-    defense: "84",
-    form: "90",
-    probability: "72%",
-    xg: "2.72",
-    recent: ["W 3-0 vs England", "W 2-1 vs Germany", "D 1-1 vs Spain"],
-    summary: "Argentina combines strong offensive chemistry with dependable midfield control."
-  },
-  England: {
-    name: "England",
-    ranking: "#4",
-    attack: "86",
-    defense: "83",
-    form: "84",
-    probability: "60%",
+    defense: "87",
+    form: "94",
+    probability: "78%",
     xg: "2.18",
-    recent: ["W 1-0 vs Portugal", "L 0-1 vs France", "W 2-1 vs Brazil"],
-    summary: "England has a balanced squad with tactical discipline and strong set-piece danger."
+    recent: ["W 1-0 vs Brazil", "W 4-2 vs Portugal", "L 1-3 vs Spain"],
+    summary: "France reached the semis behind a fast attack and disciplined defensive shape."
+  },
+  Brazil: {
+    name: "Brazil",
+    ranking: "#4",
+    attack: "89",
+    defense: "88",
+    form: "92",
+    probability: "84%",
+    xg: "2.45",
+    recent: ["L 0-1 vs France", "W 3-2 vs Netherlands", "W 2-0 vs England"],
+    summary: "Brazil rounded out the top four with explosive offense and strong pressure sequences."
   },
 };
 

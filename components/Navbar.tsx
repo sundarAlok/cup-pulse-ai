@@ -1,12 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { Trophy } from "lucide-react";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const links = [
   { name: "Home", href: "/" },
+  { name: "Premium", href: "/premium" },
   { name: "Dashboard", href: "/dashboard" },
   { name: "Predictions", href: "/predictions" },
   { name: "Rewards", href: "/rewards" },
@@ -23,14 +24,12 @@ type User = {
 export default function Navbar() {
   const pathname = usePathname();
 
-  const [user, setUser] =
-    useState<User | null>(null);
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     async function loadUser() {
       try {
         const res = await fetch("/api/me");
-
         const data = await res.json();
 
         if (data.authenticated) {
@@ -53,80 +52,136 @@ export default function Navbar() {
   }
 
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/80 backdrop-blur-xl">
-      <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 md:px-6">
-        <Link
-          href="/"
-          className="group flex items-center gap-3"
-        >
-          <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 via-indigo-600 to-violet-600 shadow-lg">
-            <Trophy
-              size={20}
-              className="text-white"
+    <header className="sticky top-4 z-50 px-4 md:px-4">
+      <div
+        className="
+          mx-auto
+          max-w-7xl
+          rounded-4xl
+          border
+          border-white/20
+          bg-white/75
+          backdrop-blur-2xl
+          shadow-[0_15px_60px_rgba(15,23,42,0.08)]
+          ring-1
+          ring-black/5
+        "
+      >
+        <div className="flex h-17 items-center justify-between px-6">
+          {/* Logo */}
+          <Link
+            href="/"
+            className="flex shrink-0 items-center transition-transform duration-300 hover:scale-[1.02]"
+          >
+            <Image
+              src="/horizontalTransparentLogo.png" 
+              alt="CupPulse AI"
+              width={200}
+              height={72}
+              priority
+              className="h-12 w-auto object-contain rounded-xl"
             />
-          </div>
+          </Link>
 
-          <div>
-            <h1 className="text-lg font-extrabold text-slate-900">
-              CupPulse AI
-            </h1>
+          {/* Navigation */}
+          <nav className="hidden lg:flex items-center gap-2 p-2">
+            {links.map((link) => {
+              const active = pathname === link.href;
 
-            <p className="text-xs text-slate-500">
-              World Cup Intelligence
-            </p>
-          </div>
-        </Link>
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={`
+                    relative
+                    rounded-full
+                    px-5
+                    py-2.5
+                    text-sm
+                    font-semibold
+                    transition-all
+                    duration-300
+                    ${
+                      active
+                        ? "bg-gradient-to-r from-cyan-500 via-blue-600 to-violet-600 text-white shadow-lg"
+                        : "text-slate-600 hover:bg-white hover:text-violet-600 hover:border-slate-900"
+                    }
+                  `}
+                >
+                  {link.name}
+                </Link>
+              );
+            })}
+          </nav>
 
-        <nav className="hidden items-center gap-2 lg:flex">
-          {links.map((link) => {
-            const active =
-              pathname === link.href;
-
-            return (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`rounded-xl px-4 py-2.5 text-sm font-semibold transition-all ${
-                  active
-                    ? "bg-gradient-to-r from-blue-600 to-violet-600 text-white"
-                    : "text-slate-600 hover:bg-slate-100"
-                }`}
-              >
-                {link.name}
-              </Link>
-            );
-          })}
-        </nav>
-
-        <div className="hidden items-center gap-3 md:flex">
-          {user ? (
-            <>
-
-
+          {/* Right Side */}
+          <div className="hidden md:flex items-center gap-3">
+            {user ? (
               <button
                 onClick={handleLogout}
-                className="rounded-xl bg-red-500 px-4 py-2 text-sm font-semibold text-white hover:bg-red-600"
+                className="
+                  rounded-full
+                  bg-gradient-to-r
+                  from-red-500
+                  to-rose-600
+                  px-6
+                  py-2.5
+                  text-sm
+                  font-semibold
+                  text-white
+                  transition-all
+                  duration-300
+                  hover:scale-105
+                  hover:shadow-lg
+                "
               >
                 Logout
               </button>
-            </>
-          ) : (
-            <>
-              <Link
-                href="/login"
-                className="rounded-xl border border-slate-200 px-4 py-2 text-sm font-semibold"
-              >
-                Login
-              </Link>
+            ) : (
+              <>
+                <Link
+                  href="/login"
+                  className="
+                    rounded-full
+                    border
+                    border-slate-300
+                    bg-white/70
+                    px-5
+                    py-2.5
+                    text-sm
+                    font-semibold
+                    text-slate-700
+                    transition-all
+                    hover:bg-white
+                  "
+                >
+                  Login
+                </Link>
 
-              <Link
-                href="/register"
-                className="rounded-xl bg-gradient-to-r from-blue-600 to-violet-600 px-4 py-2 text-sm font-semibold text-white"
-              >
-                Register
-              </Link>
-            </>
-          )}
+                <Link
+                  href="/register"
+                  className="
+                    rounded-full
+                    bg-gradient-to-r
+                    from-cyan-500
+                    via-blue-600
+                    to-violet-600
+                    px-6
+                    py-2.5
+                    text-sm
+                    font-semibold
+                    text-white
+                    shadow-lg
+                    transition-all
+                    duration-300
+                    hover:scale-105
+                  "
+                >
+                  Register
+                </Link>
+              </>
+            )}
+          </div>
         </div>
       </div>
     </header>

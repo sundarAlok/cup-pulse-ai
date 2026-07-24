@@ -6,20 +6,20 @@ import { ArrowLeft } from "lucide-react";
 import GlassCard from "@/components/GlassCard";
 
 const teams = [
-  { id: "brazil", name: "Brazil", strength: 96, color: "from-yellow-400 to-green-500" },
-  { id: "france", name: "France", strength: 94, color: "from-blue-500 to-indigo-500" },
-  { id: "argentina", name: "Argentina", strength: 92, color: "from-sky-400 to-cyan-500" },
-  { id: "england", name: "England", strength: 90, color: "from-slate-400 to-slate-700" },
-  { id: "spain", name: "Spain", strength: 88, color: "from-red-400 to-orange-500" },
-  { id: "germany", name: "Germany", strength: 87, color: "from-amber-500 to-slate-600" },
-  { id: "portugal", name: "Portugal", strength: 86, color: "from-emerald-500 to-emerald-700" },
-  { id: "netherlands", name: "Netherlands", strength: 85, color: "from-orange-400 to-red-500" },
+  { id: "spain", name: "Spain", strength: 96, color: "from-red-400 to-orange-500" },
+  { id: "argentina", name: "Argentina", strength: 94, color: "from-sky-400 to-cyan-500" },
+  { id: "france", name: "France", strength: 92, color: "from-blue-500 to-indigo-500" },
+  { id: "brazil", name: "Brazil", strength: 90, color: "from-yellow-400 to-green-500" },
+  { id: "england", name: "England", strength: 89, color: "from-slate-400 to-slate-700" },
+  { id: "germany", name: "Germany", strength: 88, color: "from-amber-500 to-slate-600" },
+  { id: "portugal", name: "Portugal", strength: 87, color: "from-emerald-500 to-emerald-700" },
+  { id: "netherlands", name: "Netherlands", strength: 86, color: "from-orange-400 to-red-500" },
 ];
 
 const bracketSeeds = [
-  ["brazil", "argentina"],
+  ["spain", "argentina"],
   ["france", "england"],
-  ["spain", "germany"],
+  ["brazil", "germany"],
   ["portugal", "netherlands"],
 ];
 
@@ -105,15 +105,16 @@ export default function SimulatorPage() {
   }, [counts, simulations]);
 
   const sortedChamps = [...chartData].sort((a, b) => b.champion - a.champion);
+  const topChampion = simulations > 0 ? sortedChamps[0] : null;
 
   return (
     <div className="space-y-8 pb-24">
       <section className="flex flex-col gap-6 rounded-[2rem] border border-slate-200 bg-white/90 p-8 shadow-xl shadow-slate-200/30">
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>
-            <p className="text-sm uppercase tracking-[0.28em] text-slate-500">Phase 4 — AI Tournament Simulator</p>
-            <h1 className="mt-3 text-4xl font-semibold text-slate-900">Simulate World Cup Brackets with AI-backed probabilities</h1>
-            <p className="mt-3 max-w-2xl text-slate-600">Run tournament simulations using team strength, form and randomness, then inspect champion probability, bracket progression, and team forecasts.</p>
+            <p className="text-sm uppercase tracking-[0.28em] text-slate-500">Phase 4 — AI Bracket Simulator</p>
+            <h1 className="mt-3 text-4xl font-semibold text-slate-900">Simulate bracket outcomes for top international teams</h1>
+            <p className="mt-3 max-w-2xl text-slate-600">Run tournament simulations using team strength, form, and randomness to inspect champion probability, bracket progression, and final matchup forecasts.</p>
           </div>
           <Link href="/" className="inline-flex items-center gap-2 rounded-full bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800">
             <ArrowLeft className="h-4 w-4" /> Back to Home
@@ -129,8 +130,14 @@ export default function SimulatorPage() {
 
           <GlassCard className="space-y-3">
             <div className="text-sm uppercase tracking-[0.24em] text-slate-500">Top Champion</div>
-            <div className="text-4xl font-bold text-slate-900">{sortedChamps[0].name}</div>
-            <p className="text-sm text-slate-600">{sortedChamps[0].champion.toFixed(1)}% champion probability</p>
+            <div className="text-4xl font-bold text-slate-900">
+              {topChampion ? topChampion.name : "Run a simulation"}
+            </div>
+            <p className="text-sm text-slate-600">
+              {topChampion
+                ? `${topChampion.champion.toFixed(1)}% champion probability`
+                : "No results yet — run a simulation to see the latest forecast."}
+            </p>
           </GlassCard>
 
           <GlassCard className="space-y-3">

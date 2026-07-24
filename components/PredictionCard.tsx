@@ -15,7 +15,7 @@ export default function PredictionCard() {
   const [error, setError] = useState("");
 
   const exampleQuestions = [
-    "Who is likely to win Argentina vs Brazil?",
+    "Who is likely to win Argentina vs Spain?",
     "Predict France vs Germany",
     "Who has a better chance between Spain and Portugal?",
   ];
@@ -61,7 +61,7 @@ export default function PredictionCard() {
         <textarea
           value={question}
           onChange={(e) => setQuestion(e.target.value)}
-          placeholder="Who is likely to win Argentina vs Brazil?"
+          placeholder="Who is likely to win Argentina vs Spain?"
           rows={4}
           className="w-full rounded-2xl border border-slate-200 bg-slate-50 p-4 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
         />

@@ -2,230 +2,142 @@
 
 import React from "react";
 import Link from "next/link";
-import {
-  ArrowRight,
-  Trophy,
-  Brain,
-  Activity,
-  TrendingUp,
-} from "lucide-react";
+import { Trophy, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function Hero() {
   return (
-    <section className="relative min-h-[70vh] flex items-center overflow-hidden pt-10 pb-40">
-      {/* Background Glow */}
-      <div className="absolute inset-0 -z-10">
-        <div className="absolute left-1/2 top-0 h-[112.5px] w-[112.5px] -translate-x-1/2 rounded-full bg-cyan-200/30 blur-[30px]" />
-        <div className="absolute -left-24 top-24 h-[75px] w-[75px] rounded-full bg-blue-200/20 blur-[25px]" />
-        <div className="absolute -right-24 top-24 h-[75px] w-[75px] rounded-full bg-violet-200/20 blur-[25px]" />
+    <section className="relative min-h-[70vh] max-h-[90vh] flex items-center overflow-hidden pt-5 pb-5 mb-20">
+      {/* Background Image */}
+      <div
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        style={{
+          backgroundImage: "url('/worldcup-hero-light.png')", // Replace with your image
+        }}
+      />
+
+      {/* Dark Overlay */}
+      <div className="absolute inset-0" />
+
+      {/* Extra Glow Effects */}
+      <div className="absolute inset-0">
+        <div className="absolute left-0 top-0 h-[500px] w-[500px] rounded-full bg-blue-600/10 blur-[150px]" />
+        <div className="absolute right-0 top-0 h-[500px] w-[500px] rounded-full bg-violet-600/10 blur-[150px]" />
       </div>
 
-      <div className="max-w-7xl mx-auto w-full px-6">
-        <div className="grid lg:grid-cols-[1.2fr_0.8fr] gap-6 items-center">
-          {/* LEFT SIDE */}
-          <div>
-            <motion.div
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              {/* Badge */}
-              <div className="inline-flex items-center gap-2 rounded-full border border-cyan-200 bg-white/80 backdrop-blur-xl px-3 py-1.5 text-xs font-medium text-slate-700 shadow-sm">
-                <Trophy className="h-3.5 w-3.5 text-cyan-600" />
-                FIFA World Cup 2026 Intelligence Platform
-              </div>
-
-              {/* Heading */}
-              <h1 className="mt-4 text-4xl md:text-5xl lg:text-6xl font-black leading-[0.95] tracking-tight text-slate-900">
-                World Cup
-                <span className="block bg-gradient-to-r from-cyan-600 via-blue-600 to-violet-600 bg-clip-text text-transparent">
-                  Intelligence
-                </span>
-                Layer
-              </h1>
-
-              {/* Description */}
-              <p className="mt-4 max-w-xl text-sm leading-relaxed text-slate-600">
-                Live match intelligence, AI predictions, tournament
-                simulations, and fan rewards powered by advanced analytics and
-                Injective infrastructure.
-              </p>
-
-              {/* CTA Buttons */}
-              <div className="mt-12 flex flex-wrap gap-3">
-                <Link
-                  href="/dashboard"
-                  className="
-                    group
-                    inline-flex
-                    items-center
-                    gap-2
-                    rounded-full
-                    bg-slate-900
-                    px-5
-                    py-3
-                    text-sm
-                    font-semibold
-                    text-white
-                    shadow-lg
-                    transition-all
-                    duration-300
-                    hover:-translate-y-0.5
-                    hover:shadow-xl
-                  "
-                >
-                  Open Dashboard
-                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                </Link>
-
-                <Link
-                  href="/predictions"
-                  className="
-                    inline-flex
-                    items-center
-                    gap-2
-                    rounded-full
-                    border
-                    border-slate-200
-                    bg-white/80
-                    backdrop-blur-xl
-                    px-5
-                    py-3
-                    text-sm
-                    font-semibold
-                    text-slate-800
-                    transition-all
-                    hover:bg-white
-                  "
-                >
-                  AI Prediction Center
-                </Link>
-              </div>
-
-              {/* Stats */}
-              <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-3">
-                {[
-                  ["48", "Teams"],
-                  ["104", "Matches"],
-                  ["2.4M", "Predictions"],
-                  ["98%", "Accuracy"],
-                ].map(([value, label]) => (
-                  <div
-                    key={label}
-                    className="
-                      rounded-2xl
-                      border
-                      border-white/70
-                      bg-white/75
-                      backdrop-blur-xl
-                      p-3
-                      shadow-md
-                    "
-                  >
-                    <div className="text-xl font-bold text-slate-900">
-                      {value}
-                    </div>
-                    <div className="text-xs text-slate-500">{label}</div>
-                  </div>
-                ))}
-              </div>
-            </motion.div>
+      {/* Content */}
+      <div className="relative z-10 flex min-h-screen max-w-7xl justify-start items-center px-6">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7 }}
+          className="max-w-2xl text-left"
+        >
+          {/* Badge */}
+          <div className="inline-flex items-center gap-2 rounded-full border border-violet-500/30 bg-violet-500/10 px-4 py-2 backdrop-blur-xl">
+            <Trophy className="h-4 w-4 text-violet-700" />
+            <span className="text-sm font-medium text-violet-700">
+              FIFA World Cup 2026 Intelligence Platform
+            </span>
           </div>
 
-          {/* RIGHT SIDE */}
-          <div>
-            <motion.div
-              initial={{ opacity: 0, scale: 0.97 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5 }}
+          {/* Heading */}
+          <h1 className="mt-8 text-5xl font-black leading-[0.9] tracking-tight text-black md:text-5xl lg:text-6xl">
+            The Future of
+            <span className="grid lg:grid-cols-[1fr_1fr]">
+              <span className="block bg-gradient-to-r from-cyan-400 via-blue-700 to-violet-900 bg-clip-text text-transparent">
+              World Cup
+            </span>
+            <span className="block bg-gradient-to-r from-purple-900 via-violet-700 to-violet-500 bg-clip-text text-transparent">Intelligence</span>
+            </span>
+            
+          </h1>
+
+          {/* Description */}
+          <p className="mt-8 max-w-xl text-lg leading-relaxed text-slate-500 md:text-base">
+            AI-powered predictions, real-time match intelligence,
+            tournament simulations, and fan rewards powered by
+            Injective infrastructure.
+          </p>
+
+          {/* CTA Buttons */}
+          <div className="mt-10 flex flex-wrap gap-4">
+            <Link
+              href="/dashboard"
               className="
-                rounded-3xl
-                border
-                border-white/70
-                bg-white/80
-                backdrop-blur-2xl
-                p-6
-                shadow-[0_20px_50px_rgba(15,23,42,0.08)]
+                group
+                inline-flex
+                items-center
+                gap-2
+                rounded-full
+                bg-gradient-to-r
+                from-violet-600
+                via-blue-600
+                to-cyan-500
+                px-8
+                py-4
+                text-white
+                font-semibold
+                shadow-[0_10px_40px_rgba(99,102,241,0.4)]
+                transition-all
+                duration-300
+                hover:scale-105
               "
             >
-              {/* Match Header */}
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-xs text-slate-500">Live Match</p>
+              Explore Dashboard
+              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+            </Link>
 
-                  <h3 className="mt-1 text-lg font-bold text-slate-900">
-                    Brazil 2 — 1 France
-                  </h3>
-
-                  <p className="mt-1 text-xs text-slate-500">
-                    84 • Semi Final
-                  </p>
-                </div>
-
-                <div className="text-right">
-                  <p className="text-xs text-slate-500">AI Win Prob.</p>
-
-                  <div className="text-2xl font-black text-cyan-600">
-                    62%
-                  </div>
-                </div>
-              </div>
-
-              {/* Analytics */}
-              <div className="mt-4 space-y-3">
-                <div className="flex items-center justify-between rounded-xl bg-slate-50 p-3">
-                  <div className="flex items-center gap-2">
-                    <Brain className="h-4 w-4 text-cyan-600" />
-                    <span className="text-sm font-medium">
-                      Prediction Confidence
-                    </span>
-                  </div>
-
-                  <span className="text-sm font-bold">89%</span>
-                </div>
-
-                <div className="flex items-center justify-between rounded-xl bg-slate-50 p-3">
-                  <div className="flex items-center gap-2">
-                    <TrendingUp className="h-4 w-4 text-emerald-600" />
-                    <span className="text-sm font-medium">
-                      Momentum Index
-                    </span>
-                  </div>
-
-                  <span className="text-sm font-bold">+17</span>
-                </div>
-
-                <div className="flex items-center justify-between rounded-xl bg-slate-50 p-3">
-                  <div className="flex items-center gap-2">
-                    <Activity className="h-4 w-4 text-violet-600" />
-                    <span className="text-sm font-medium">
-                      Expected Goals
-                    </span>
-                  </div>
-
-                  <span className="text-sm font-bold">2.48</span>
-                </div>
-              </div>
-
-              {/* Probability Bar */}
-              <div className="mt-4">
-                <div className="mb-2 flex justify-between text-xs text-slate-600">
-                  <span>Brazil Win Probability</span>
-                  <span>62%</span>
-                </div>
-
-                <div className="h-2 overflow-hidden rounded-full bg-slate-200">
-                  <div
-                    className="h-full rounded-full bg-gradient-to-r from-cyan-500 to-blue-600"
-                    style={{ width: "62%" }}
-                  />
-                </div>
-              </div>
-            </motion.div>
+            <Link
+              href="/predictions"
+              className="
+                inline-flex
+                items-center
+                rounded-full
+                border
+                border-white/20
+                bg-white/40
+                px-8
+                py-4
+                text-black
+                font-semibold
+                backdrop-blur-xl
+                transition-all
+                duration-300
+                hover:bg-white/10
+              "
+            >
+              AI Predictions
+            </Link>
           </div>
-        </div>
+
+          {/* Small Trust Metrics */}
+          <div className="mt-14 flex flex-wrap gap-8 text-sm">
+            <div>
+              <div className="text-3xl font-black text-black">48</div>
+              <div className="text-slate-800">Teams</div>
+            </div>
+
+            <div>
+              <div className="text-3xl font-black text-black">104</div>
+              <div className="text-slate-800">Matches</div>
+            </div>
+
+            <div>
+              <div className="text-3xl font-black text-black">2.4M+</div>
+              <div className="text-slate-800">Predictions</div>
+            </div>
+
+            <div>
+              <div className="text-3xl font-black text-black">98%</div>
+              <div className="text-slate-800">Accuracy</div>
+            </div>
+          </div>
+        </motion.div>
       </div>
+
+      {/* Bottom Fade */}
+      <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-background to-transparent" />
     </section>
   );
 }

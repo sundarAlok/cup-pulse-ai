@@ -43,6 +43,53 @@ function persistPremiumUnlockJsonRecord(record: PremiumUnlockJsonRecord) {
   savePremiumUnlocksJson(records);
 }
 
+const checkinsJsonPath = path.join(process.cwd(), "database", "checkins.json");
+
+function ensureCheckinsJsonFile() {
+  if (!fs.existsSync(checkinsJsonPath)) {
+    fs.writeFileSync(checkinsJsonPath, JSON.stringify([], null, 2), "utf8");
+  }
+}
+
+function loadCheckinsJson(): CheckinRecord[] {
+  ensureCheckinsJsonFile();
+  try {
+    const fileContents = fs.readFileSync(checkinsJsonPath, "utf8");
+    return JSON.parse(fileContents) as CheckinRecord[];
+  } catch (error) {
+    console.error("Failed to load checkins JSON:", error);
+    return [];
+  }
+}
+
+function saveCheckinsJson(records: CheckinRecord[]) {
+  ensureCheckinsJsonFile();
+  fs.writeFileSync(checkinsJsonPath, JSON.stringify(records, null, 2), "utf8");
+}
+
+function getUserCheckinRecord(userId: number): CheckinRecord | undefined {
+  return loadCheckinsJson().find((record) => record.userId === userId);
+}
+
+function upsertUserCheckinRecord(record: CheckinRecord) {
+  const records = loadCheckinsJson();
+  const existingIndex = records.findIndex((item) => item.userId === record.userId);
+
+  if (existingIndex >= 0) {
+    records[existingIndex] = record;
+  } else {
+    records.push(record);
+  }
+
+  saveCheckinsJson(records);
+}
+
+export type CheckinRecord = {
+  userId: number;
+  lastCheckin: string;
+  streak: number;
+};
+
 function isValidTxHash(txHash: unknown): txHash is string {
   return typeof txHash === "string" && /^0x[a-fA-F0-9]{64}$/.test(txHash);
 }
@@ -196,6 +243,24 @@ export function addPoints(
   ).run(points, userId);
 
   return getUserPoints(userId);
+}
+
+export function getCheckinRecord(
+  userId: number
+): CheckinRecord | undefined {
+  return getUserCheckinRecord(userId);
+}
+
+export function saveCheckinRecord(
+  userId: number,
+  lastCheckin: string,
+  streak: number
+) {
+  upsertUserCheckinRecord({
+    userId,
+    lastCheckin,
+    streak,
+  });
 }
 
 export function deductPoints(
