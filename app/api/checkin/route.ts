@@ -4,6 +4,7 @@ import {
   addPoints,
   getCheckinRecord,
   saveCheckinRecord,
+  getUserPoints,
 } from "@/lib/db";
 
 export async function POST() {

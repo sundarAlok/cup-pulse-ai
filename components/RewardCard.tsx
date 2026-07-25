@@ -1,13 +1,19 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import {
+  Gift,
+  Coins,
+  ArrowRight,
+  CheckCircle2,
+} from "lucide-react";
 
 export default function RewardCard() {
   const [points, setPoints] = useState(0);
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const loadPoints = async () => {
+  const loadPoints = useCallback(async () => {
     try {
       const res = await fetch("/api/rewards");
       const data = await res.json();
@@ -18,30 +24,53 @@ export default function RewardCard() {
     } catch (error) {
       console.error(error);
     }
+  }, []);
+
+useEffect(() => {
+  let mounted = true;
+
+  const initialize = async () => {
+    try {
+      const res = await fetch("/api/rewards");
+      const data = await res.json();
+
+      if (mounted && data.success) {
+        setPoints(data.points);
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
 
-  useEffect(() => {
-    let cancelled = false;
+  void initialize();
 
-    const initializePoints = async () => {
-      try {
-        const res = await fetch("/api/rewards");
-        const data = await res.json();
+  const refreshPoints = async () => {
+    try {
+      const res = await fetch("/api/rewards");
+      const data = await res.json();
 
-        if (!cancelled && data.success) {
-          setPoints(data.points);
-        }
-      } catch (error) {
-        console.error(error);
+      if (mounted && data.success) {
+        setPoints(data.points);
       }
-    };
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
-    void initializePoints();
+  window.addEventListener(
+    "pointsUpdated",
+    refreshPoints
+  );
 
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+  return () => {
+    mounted = false;
+
+    window.removeEventListener(
+      "pointsUpdated",
+      refreshPoints
+    );
+  };
+}, []);
 
   const claimReward = async () => {
     try {
@@ -57,6 +86,10 @@ export default function RewardCard() {
       setMessage(data.message);
 
       await loadPoints();
+
+      window.dispatchEvent(
+        new CustomEvent("points-updated")
+      );
     } catch {
       setMessage("Reward claim failed.");
     } finally {
@@ -64,81 +97,182 @@ export default function RewardCard() {
     }
   };
 
-  const redeemableUSDT = Math.floor(points / 100);
-  const canClaim = redeemableUSDT > 0;
-
+  const redeemableINJ = Math.floor(points / 100);
+  const canClaim = redeemableINJ > 0;
 
   return (
-    <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-      <div className="flex items-center justify-between">
+    <div
+      className="
+        rounded-[32px]
+        border
+        border-slate-200
+        bg-white
+        p-8
+        shadow-sm
+        transition-all
+        duration-300
+        hover:shadow-lg
+      "
+    >
+      {/* Header */}
+      <div className="flex items-start justify-between">
         <div>
-          <p className="text-sm text-slate-500">
+          <p className="text-sm font-medium text-slate-500">
             Redeemable Reward
           </p>
 
-          <h2 className="mt-2 text-4xl font-bold text-green-600">
-            {redeemableUSDT} USDT
+          <h2 className="mt-2 text-5xl font-black text-emerald-600">
+            {redeemableINJ} INJ
           </h2>
         </div>
 
-        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-green-50">
-          <span className="text-2xl">💰</span>
+        <div
+          className="
+            flex
+            h-16
+            w-16
+            items-center
+            justify-center
+            rounded-2xl
+            bg-gradient-to-br
+            from-emerald-500
+            to-cyan-500
+            text-white
+            shadow-lg
+          "
+        >
+          <Gift className="h-8 w-8" />
         </div>
       </div>
 
       <p className="mt-4 text-slate-500">
-        Redeem rewards earned from predictions and fan participation.
+        Convert earned points into Injective
+        ecosystem rewards.
       </p>
 
-      <div className="mt-6 rounded-2xl bg-slate-50 p-4">
-        <div className="flex justify-between">
-          <span className="text-slate-500">
-            Current Points
-          </span>
+      {/* Conversion */}
+      <div className="mt-8 rounded-3xl bg-slate-50 p-5">
+        <div className="flex items-center gap-2">
+          <Coins className="h-5 w-5 text-cyan-600" />
 
-          <span className="font-semibold">
-            {points}
-          </span>
-        </div>
-
-        <div className="mt-3 flex justify-between">
-          <span className="text-slate-500">
-            Conversion Rate
-          </span>
-
-          <span className="font-semibold">
-            100 → 1 USDT
+          <span className="font-semibold text-slate-900">
+            Reward Conversion
           </span>
         </div>
 
-        <div className="mt-3 flex justify-between">
-          <span className="text-slate-500">
-            Available Reward
+        <div className="mt-5 space-y-4">
+          <div className="flex items-center justify-between">
+            <span className="text-slate-500">
+              Current Points
+            </span>
+
+            <span className="font-bold text-slate-900">
+              {points}
+            </span>
+          </div>
+
+          <div className="flex items-center justify-between">
+            <span className="text-slate-500">
+              Conversion Rate
+            </span>
+
+            <span className="font-bold text-cyan-600">
+              100 → 1 INJ
+            </span>
+          </div>
+
+          <div className="flex items-center justify-between">
+            <span className="text-slate-500">
+              Available Reward
+            </span>
+
+            <span className="font-bold text-emerald-600">
+              {redeemableINJ} INJ
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Status */}
+      <div className="mt-6 rounded-3xl border border-cyan-100 bg-cyan-50 p-4">
+        <div className="flex items-center justify-between">
+          <span className="text-slate-700">
+            Next Reward Unlock
           </span>
 
-          <span className="font-semibold text-green-600">
-            {redeemableUSDT} USDT
+          <span className="font-bold text-cyan-700">
+            {100 - (points % 100)} pts
           </span>
         </div>
       </div>
 
+      {/* Claim Button */}
       <button
         onClick={claimReward}
         disabled={loading || !canClaim}
-        className="mt-6 w-full rounded-xl bg-green-600 py-3 font-semibold text-white transition hover:bg-green-700 disabled:cursor-not-allowed disabled:bg-slate-300"
+        className="
+          group
+          mt-6
+          flex
+          w-full
+          items-center
+          justify-center
+          gap-2
+          rounded-2xl
+          bg-gradient-to-r
+          from-cyan-500
+          via-blue-600
+          to-violet-600
+          py-3.5
+          font-semibold
+          text-white
+          transition-all
+          duration-300
+          hover:scale-[1.02]
+          disabled:cursor-not-allowed
+          disabled:opacity-50
+        "
       >
         {loading
           ? "Claiming..."
           : canClaim
-          ? `Claim ${redeemableUSDT} USDT`
+          ? `Claim ${redeemableINJ} INJ`
           : "Need 100 Points"}
+
+        {!loading && (
+          <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+        )}
       </button>
 
+      {/* Success/Error Message */}
       {message && (
-        <div className="mt-4 rounded-xl border border-green-200 bg-green-50 p-4 text-green-700">
-          {message}
+        <div
+          className="
+            mt-5
+            flex
+            items-start
+            gap-2
+            rounded-2xl
+            border
+            border-emerald-200
+            bg-emerald-50
+            p-4
+            text-emerald-700
+          "
+        >
+          <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0" />
+          <span>{message}</span>
         </div>
       )}
+
+      {/* Footer */}
+      <div className="mt-6 border-t border-slate-100 pt-5">
+        <p className="text-sm text-slate-500">
+          Rewards are simulated on the Injective
+          Testnet environment for demonstration
+          purposes.
+        </p>
+      </div>
     </div>
   );
 }

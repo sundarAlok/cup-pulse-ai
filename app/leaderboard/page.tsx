@@ -19,7 +19,7 @@ export default function LeaderboardPage() {
     .all() as User[];
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 px-28 py-24">
       <section className="rounded-3xl bg-gradient-to-r from-blue-600 to-violet-600 p-8 text-white">
         <p className="text-sm opacity-80">
           Community Rankings

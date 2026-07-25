@@ -39,7 +39,7 @@ const technologies = [
 
 export default function InjectivePage() {
   return (
-    <div className="space-y-10">
+    <div className="space-y-10 px-28 py-24">
       {/* Hero */}
       <section className="relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-white via-blue-50 to-indigo-100 p-10 shadow-sm">
         <div className="absolute right-0 top-0 h-72 w-72 rounded-full bg-blue-200/30 blur-3xl" />

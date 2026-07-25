@@ -13,13 +13,13 @@ export default function HomePage() {
   const [activeTeam, setActiveTeam] = useState<TeamAnalyticsData | null>(null);
 
   return (
-    <div className="relative overflow-hidden pb-24">
+    <div className="relative overflow-hidden top-0 bg-white pb-24 ">
       <AnimatedBackground />
 
-      <main className="relative">
+      <main className="relative w-full">
         <Hero />
 
-        <div className="max-w-7xl mx-auto w-full px-6 space-y-12">
+        <div className="w-full px-28 space-y-12">
           {/* Live Match Intelligence */}
 
           {/* Tournament Intelligence Graph */}
@@ -36,7 +36,7 @@ export default function HomePage() {
           <section>
             <GlassCard className="grid gap-6 md:grid-cols-[1.3fr_0.9fr] items-stretch p-8">
               <div className="space-y-4">
-                <div className="flex items-center gap-3 rounded-3xl bg-slate-100 px-4 py-3 text-sm font-semibold text-slate-800 shadow-sm">
+                <div className="flex items-center gap-3 rounded-3xl bg-slate-100 px-4 py-3 text-sm font-semibold text-slate-800">
                   <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-linear-to-br from-cyan-400 to-blue-600 text-white text-lg">⚡</span>
                   <span>AI-driven tournament simulation</span>
                 </div>
@@ -45,7 +45,7 @@ export default function HomePage() {
                 <p className="max-w-xl text-base leading-7 text-slate-600">Run AI-powered tournament models, compare likely champions, and explore bracket probability in one fast simulation workflow.</p>
               </div>
 
-              <div className="rounded-4xl border border-slate-200 bg-white p-6 shadow-sm">
+              <div className="rounded-4xl border border-slate-200 bg-white p-6">
                 <div className="space-y-4">
                   <div className="rounded-3xl bg-slate-50 p-4">
                     <p className="text-xs uppercase tracking-[0.24em] text-slate-500">Reality score</p>
@@ -70,7 +70,7 @@ export default function HomePage() {
 
           {/* Premium Intelligence Banner */}
           <section>
-            <GlassCard className="overflow-hidden rounded-4xl border border-slate-200/80 bg-linear-to-r from-slate-900 via-slate-800 to-cyan-900 p-8 text-white shadow-[0_20px_50px_rgba(15,23,42,0.16)]">
+            <GlassCard className="overflow-hidden rounded-4xl border border-slate-200/80 bg-linear-to-r from-slate-900 via-slate-800 to-cyan-900 p-8 text-white">
               <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
                 <div className="max-w-2xl">
                   <div className="inline-flex items-center rounded-full border border-cyan-400/40 bg-cyan-200/20 px-3 py-1 text-sm font-semibold text-cyan-700">

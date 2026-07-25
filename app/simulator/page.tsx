@@ -108,11 +108,11 @@ export default function SimulatorPage() {
   const topChampion = simulations > 0 ? sortedChamps[0] : null;
 
   return (
-    <div className="space-y-8 pb-24">
+    <div className="space-y-8 pb-24 px-28 py-24">
       <section className="flex flex-col gap-6 rounded-[2rem] border border-slate-200 bg-white/90 p-8 shadow-xl shadow-slate-200/30">
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>
-            <p className="text-sm uppercase tracking-[0.28em] text-slate-500">Phase 4 — AI Bracket Simulator</p>
+            <p className="text-sm uppercase tracking-[0.28em] text-slate-500">AI Bracket Simulator</p>
             <h1 className="mt-3 text-4xl font-semibold text-slate-900">Simulate bracket outcomes for top international teams</h1>
             <p className="mt-3 max-w-2xl text-slate-600">Run tournament simulations using team strength, form, and randomness to inspect champion probability, bracket progression, and final matchup forecasts.</p>
           </div>

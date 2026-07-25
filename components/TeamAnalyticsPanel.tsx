@@ -72,7 +72,7 @@ export default function TeamAnalyticsPanel({ team }: TeamAnalyticsPanelProps) {
   const data = team ?? placeholder;
 
   return (
-    <div className="rounded-[2rem] border border-slate-200 bg-white/90 p-6 shadow-xl shadow-slate-200/30">
+    <div className="rounded-[2rem] border border-slate-200 bg-white/90 p-6 shadow-premium">
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div className="flex items-center gap-3">
           {getFlagSrc(data.name) ? (

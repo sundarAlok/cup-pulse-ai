@@ -6,6 +6,8 @@ import {
 } from "@/lib/db";
 import { simulateRewardClaim } from "@/lib/injective";
 
+const POINTS_PER_INJ = 100;
+
 export async function GET() {
   try {
     const cookieStore = await cookies();
@@ -29,17 +31,24 @@ export async function GET() {
     return NextResponse.json({
       success: true,
       points,
-      eligibleReward: Math.floor(points / 100),
-      rewardUnit: "Testnet USDT",
+      eligibleReward: Math.floor(
+        points / POINTS_PER_INJ
+      ),
+      rewardUnit: "INJ",
+      conversionRate: `${POINTS_PER_INJ} Points = 1 INJ`,
     });
   } catch (error) {
-    console.error("Rewards GET Error:", error);
+    console.error(
+      "Rewards GET Error:",
+      error
+    );
 
     return NextResponse.json(
       {
         success: false,
         points: 0,
         eligibleReward: 0,
+        rewardUnit: "INJ",
       },
       { status: 500 }
     );
@@ -66,24 +75,60 @@ export async function POST() {
 
     const points = getUserPoints(userId);
 
-    const result =
-      await simulateRewardClaim(points);
+    const availableRewards =
+      Math.floor(
+        points / POINTS_PER_INJ
+      );
 
-    if (!result.success) {
+    if (availableRewards <= 0) {
       return NextResponse.json(
-        result,
+        {
+          success: false,
+          message:
+            "You need at least 100 points to redeem 1 INJ.",
+        },
         { status: 400 }
       );
     }
 
-    deductPoints(userId, 100);
+    const result =
+      await simulateRewardClaim(
+        availableRewards
+      );
+
+    if (!result.success) {
+      return NextResponse.json(
+        {
+          success: false,
+          message:
+            result.message ||
+            "Reward claim failed.",
+        },
+        { status: 400 }
+      );
+    }
+
+    const pointsToDeduct =
+      availableRewards *
+      POINTS_PER_INJ;
+
+    deductPoints(
+      userId,
+      pointsToDeduct
+    );
 
     const updatedPoints =
       getUserPoints(userId);
 
     return NextResponse.json({
-      ...result,
-      remainingPoints: updatedPoints,
+      success: true,
+      message: `${availableRewards} INJ reward claimed successfully.`,
+      claimedINJ:
+        availableRewards,
+      pointsDeducted:
+        pointsToDeduct,
+      remainingPoints:
+        updatedPoints,
     });
   } catch (error) {
     console.error(
@@ -94,7 +139,8 @@ export async function POST() {
     return NextResponse.json(
       {
         success: false,
-        message: "Reward claim failed.",
+        message:
+          "Reward claim failed.",
       },
       { status: 500 }
     );

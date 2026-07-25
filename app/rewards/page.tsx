@@ -1,152 +1,322 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import {
+  Trophy,
+  Gift,
+  Coins,
+  Flame,
+  ArrowRight,
+  CheckCircle2,
+} from "lucide-react";
+
 import PointsCard from "@/components/PointsCard";
 import RewardCard from "@/components/RewardCard";
 
 export default function RewardsPage() {
+  const [checkinLoading, setCheckinLoading] = useState(false);
+  const [checkinMessage, setCheckinMessage] = useState("");
+  const [streak, setStreak] = useState(() => {
+    if (typeof window === "undefined") {
+      return 0;
+    }
+
+    const saved = localStorage.getItem(
+      "cupPulseStreak"
+    );
+
+    return saved ? Number(saved) : 0;
+  });
+
+  async function handleCheckin() {
+    try {
+      setCheckinLoading(true);
+      setCheckinMessage("");
+
+      const res = await fetch("/api/checkin", {
+        method: "POST",
+      });
+
+      const data = await res.json();
+
+      setCheckinMessage(data.message);
+
+      if (data.success) {
+        setStreak(data.streak || 0);
+
+        // refresh points cards
+        window.dispatchEvent(
+          new CustomEvent("points-updated")
+        );
+      }
+    } catch {
+      setCheckinMessage("Check-in failed");
+    } finally {
+      setCheckinLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    localStorage.setItem(
+      "cupPulseStreak",
+      String(streak)
+    );
+  }, [streak]);
+
+  useEffect(() => {
+    localStorage.setItem(
+      "cupPulseStreak",
+      String(streak)
+    );
+  }, [streak]);
+
   return (
-    <div className="space-y-8">
-      {/* Hero */}
-      <section className="relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-r from-blue-50 via-white to-indigo-50 p-8 shadow-sm">
-        <div className="absolute right-0 top-0 h-40 w-40 rounded-full bg-blue-100 blur-3xl" />
+    <div className="px-4 py-28 lg:px-24">
+      <div className="mx-auto max-w-7xl space-y-8">
+        {/* Hero */}
+        <section
+          className="
+            relative
+            overflow-hidden
+            rounded-[32px]
+            border
+            border-slate-200/70
+            bg-white/80
+            p-8
+            backdrop-blur-xl
+            premium-shadow
+          "
+        >
+          <div className="absolute -top-24 right-0 h-64 w-64 rounded-full bg-cyan-200/40 blur-3xl" />
+          <div className="absolute -bottom-24 left-0 h-64 w-64 rounded-full bg-violet-200/40 blur-3xl" />
 
-        <div className="relative">
-          <p className="text-sm font-medium text-blue-600">
-            Fan Engagement System
-          </p>
+          <div className="relative">
+            <div className="inline-flex items-center gap-2 rounded-full border border-cyan-200 bg-cyan-50 px-4 py-2 text-sm font-semibold text-cyan-700">
+              <Gift className="h-4 w-4" />
+              Injective Fan Rewards
+            </div>
 
-          <h1 className="mt-2 text-4xl font-bold text-slate-900">
-            Fan Rewards
-          </h1>
+            <h1 className="mt-4 text-4xl font-black text-slate-900 lg:text-5xl">
+              Earn Points.
+              <br />
+              Redeem INJ Rewards.
+            </h1>
 
-          <p className="mt-4 max-w-3xl text-slate-600">
-            Earn points through daily participation and match
-            predictions. Redeem rewards through the Injective
-            ecosystem reward system.
-          </p>
-        </div>
-      </section>
-
-      {/* Rewards Rules Row */}
-      <section className="grid gap-4 md:grid-cols-4">
-        {/* Daily Check-In */}
-        <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-          <h3 className="font-bold text-slate-900">
-            Daily Check-In
-          </h3>
-
-          <p className="mt-2 text-sm text-slate-500">
-            Earn 10 points every day.
-          </p>
-
-          <button className="mt-5 w-full rounded-xl bg-blue-600 py-3 font-medium text-white transition hover:bg-blue-700">
-            Claim +10 Points
-          </button>
-        </div>
-
-        {/* Prediction */}
-        <div className="rounded-3xl border border-blue-100 bg-blue-50 p-6 shadow-sm">
-          <p className="text-sm text-slate-500">
-            Prediction Submission
-          </p>
-
-          <h3 className="mt-4 text-4xl font-bold text-blue-600">
-            +5
-          </h3>
-        </div>
-
-        {/* Correct */}
-        <div className="rounded-3xl border border-green-100 bg-green-50 p-6 shadow-sm">
-          <p className="text-sm text-slate-500">
-            Correct Prediction
-          </p>
-
-          <h3 className="mt-4 text-4xl font-bold text-green-600">
-            +50
-          </h3>
-        </div>
-
-        {/* Wrong */}
-        <div className="rounded-3xl border border-red-100 bg-red-50 p-6 shadow-sm">
-          <p className="text-sm text-slate-500">
-            Wrong Prediction
-          </p>
-
-          <h3 className="mt-4 text-4xl font-bold text-red-600">
-            -20
-          </h3>
-        </div>
-      </section>
-
-      {/* Main Cards */}
-      <section className="grid gap-6 lg:grid-cols-2">
-        <PointsCard />
-        <RewardCard />
-      </section>
-
-      {/* Injective Reward Flow */}
-      <section className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
-        <h2 className="text-2xl font-bold text-slate-900">
-          Injective Reward Flow
-        </h2>
-
-        <p className="mt-2 text-slate-500">
-          Fans earn points from participation and predictions.
-          Every 100 points can be redeemed for 1 USDT reward on
-          Injective Testnet.
-        </p>
-
-        <div className="mt-8 grid gap-4 md:grid-cols-4">
-          <div className="rounded-2xl bg-slate-50 p-5">
-            <h3 className="font-semibold">
-              Daily Activity
-            </h3>
-
-            <p className="mt-2 text-sm text-slate-500">
-              Earn points through check-ins.
+            <p className="mt-4 max-w-3xl text-slate-600">
+              Participate in daily activities, submit match
+              predictions and earn reward points. Every 100
+              points can be redeemed for 1 INJ on Injective
+              Testnet.
             </p>
           </div>
+        </section>
 
-          <div className="rounded-2xl bg-slate-50 p-5">
-            <h3 className="font-semibold">
-              Predictions
-            </h3>
+        {/* Daily Checkin */}
+        <section className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
+          <div
+            className="
+              rounded-[32px]
+              border
+              border-slate-200
+              bg-white
+              p-8
+              shadow-sm
+            "
+          >
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <h2 className="text-2xl font-bold text-slate-900">
+                  Daily Check-In
+                </h2>
 
-            <p className="mt-2 text-sm text-slate-500">
-              Submit predictions and earn rewards.
-            </p>
+                <p className="mt-2 text-slate-500">
+                  Claim your daily reward and keep your
+                  streak alive.
+                </p>
+              </div>
+
+              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-cyan-50">
+                <Coins className="h-7 w-7 text-cyan-600" />
+              </div>
+            </div>
+
+            <div className="mt-6 flex flex-wrap items-center gap-4">
+              <button
+                onClick={handleCheckin}
+                disabled={checkinLoading}
+                className="
+                  rounded-2xl
+                  bg-gradient-to-r
+                  from-cyan-500
+                  via-blue-600
+                  to-violet-600
+                  px-6
+                  py-3
+                  font-semibold
+                  text-white
+                  transition
+                  hover:scale-[1.02]
+                  disabled:opacity-60
+                "
+              >
+                {checkinLoading
+                  ? "Claiming..."
+                  : "Claim +10 Points"}
+              </button>
+
+              <div className="flex items-center gap-2 rounded-2xl bg-orange-50 px-4 py-3">
+                <Flame className="h-5 w-5 text-orange-500" />
+                <span className="font-semibold text-orange-600">
+                  {streak} Day Streak
+                </span>
+              </div>
+            </div>
+
+            {checkinMessage && (
+              <div
+                className="
+                  mt-5
+                  flex
+                  items-center
+                  gap-2
+                  rounded-2xl
+                  border
+                  border-cyan-100
+                  bg-cyan-50
+                  p-4
+                  text-cyan-700
+                "
+              >
+                <CheckCircle2 className="h-5 w-5" />
+                {checkinMessage}
+              </div>
+            )}
           </div>
 
-          <div className="rounded-2xl bg-slate-50 p-5">
-            <h3 className="font-semibold">
-              Claim Reward
+          {/* Rules */}
+          <div
+            className="
+              rounded-[32px]
+              border
+              border-slate-200
+              bg-white
+              p-8
+              shadow-sm
+            "
+          >
+            <h3 className="font-bold text-slate-900">
+              Reward Rules
             </h3>
 
-            <p className="mt-2 text-sm text-slate-500">
-              Redeem once you reach 100 points.
-            </p>
+            <div className="mt-5 space-y-3">
+              <div className="flex items-center justify-between rounded-2xl bg-cyan-50 px-4 py-3">
+                <span>Daily Check-In</span>
+                <span className="font-bold text-cyan-600">
+                  +10
+                </span>
+              </div>
+
+              <div className="flex items-center justify-between rounded-2xl bg-blue-50 px-4 py-3">
+                <span>Prediction Submitted</span>
+                <span className="font-bold text-blue-600">
+                  +5
+                </span>
+              </div>
+
+              <div className="flex items-center justify-between rounded-2xl bg-green-50 px-4 py-3">
+                <span>Correct Prediction</span>
+                <span className="font-bold text-green-600">
+                  +50
+                </span>
+              </div>
+
+              <div className="flex items-center justify-between rounded-2xl bg-red-50 px-4 py-3">
+                <span>Wrong Prediction</span>
+                <span className="font-bold text-red-600">
+                  -20
+                </span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Main Cards */}
+        <section className="grid gap-6 lg:grid-cols-2">
+          <PointsCard />
+          <RewardCard />
+        </section>
+
+        {/* Reward Flow */}
+        <section
+          className="
+            rounded-[32px]
+            border
+            border-slate-200
+            bg-white
+            p-8
+            shadow-sm
+          "
+        >
+          <h2 className="text-2xl font-bold text-slate-900">
+            Reward Journey
+          </h2>
+
+          <div className="mt-8 grid gap-4 md:grid-cols-4">
+            {[
+              "Daily Activity",
+              "Predictions",
+              "Earn Points",
+              "Redeem INJ",
+            ].map((step, index) => (
+              <div
+                key={step}
+                className="
+                  relative
+                  rounded-3xl
+                  bg-slate-50
+                  p-6
+                "
+              >
+                <div className="mb-3 text-sm font-semibold text-cyan-600">
+                  Step {index + 1}
+                </div>
+
+                <h3 className="font-bold text-slate-900">
+                  {step}
+                </h3>
+
+                {index < 3 && (
+                  <ArrowRight className="absolute -right-3 top-1/2 hidden h-5 w-5 -translate-y-1/2 text-slate-400 md:block" />
+                )}
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* History */}
+        <section
+          className="
+            rounded-[32px]
+            border
+            border-slate-200
+            bg-white
+            p-8
+            shadow-sm
+          "
+        >
+          <div className="flex items-center gap-3">
+            <Trophy className="h-6 w-6 text-violet-600" />
+
+            <h2 className="text-2xl font-bold text-slate-900">
+              Reward History
+            </h2>
           </div>
 
-          <div className="rounded-2xl bg-slate-50 p-5">
-            <h3 className="font-semibold">
-              Injective Testnet
-            </h3>
-
-            <p className="mt-2 text-sm text-slate-500">
-              Receive USDT through the reward flow.
-            </p>
+          <div className="mt-6 rounded-3xl bg-slate-50 p-6 text-center text-slate-500">
+            No rewards claimed yet.
           </div>
-        </div>
-      </section>
-
-      {/* Reward History */}
-      <section className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
-        <h2 className="mb-6 text-2xl font-bold text-slate-900">
-          Reward History
-        </h2>
-
-        <div className="rounded-2xl bg-slate-50 p-5 text-slate-500">
-          No rewards claimed yet.
-        </div>
-      </section>
+        </section>
+      </div>
     </div>
   );
 }

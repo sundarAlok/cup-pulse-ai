@@ -27,7 +27,7 @@ export default async function PredictionsPage() {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 px-28 py-24">
       {/* Hero */}
       <section className="rounded-3xl border border-slate-200 bg-gradient-to-r from-blue-50 via-white to-indigo-50 p-8 shadow-sm">
         <p className="text-sm font-medium text-blue-600">

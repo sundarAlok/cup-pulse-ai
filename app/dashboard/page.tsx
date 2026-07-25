@@ -44,7 +44,7 @@ export default async function DashboardPage() {
   );
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-10 px-28 py-24">
       {/* Hero */}
       <section className="relative overflow-hidden rounded-3xl border border-slate-200 bg-gradient-to-br from-blue-50 via-white to-indigo-50 p-8 shadow-sm">
         <div className="absolute right-0 top-0 h-40 w-40 rounded-full bg-blue-100 blur-3xl" />

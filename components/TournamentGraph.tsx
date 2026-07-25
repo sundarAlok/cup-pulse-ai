@@ -293,7 +293,7 @@ export default function TournamentGraph({ onTeamSelect }: TournamentGraphProps) 
   }, [onTeamSelect]);
 
   return (
-    <div className="rounded-[2rem] border border-slate-200 bg-white/90 p-5 shadow-xl shadow-slate-200/30">
+    <div className="rounded-[2rem] border border-slate-200 bg-white/90 p-5 shadow-premium">
       <div className="mb-4 flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
         <div>
           <p className="text-sm uppercase tracking-[0.24em] text-slate-500">Tournament Intelligence Graph</p>

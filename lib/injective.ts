@@ -17,7 +17,7 @@ export async function simulateRewardClaim(
 
   return {
     success: true,
-    reward: `${rewardAmount} USDC`,
+    reward: `${rewardAmount} INJ`,
     txHash: `inj_${Math.random()
       .toString(36)
       .substring(2, 14)}`,

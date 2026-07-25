@@ -502,307 +502,383 @@ export default function PremiumPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,rgba(34,211,238,0.12),transparent_35%),linear-gradient(135deg,#f8fbff,#eef4ff)] px-6 py-12">
-      <div className="mx-auto flex max-w-6xl flex-col gap-8">
-        {/* <Link href="/" className="inline-flex items-center gap-2 text-sm font-semibold text-slate-700">
-          <ArrowLeft className="h-4 w-4" /> Back to home
-        </Link> */}
-
-        <GlassCard className="rounded-4xl border border-slate-200/80 bg-white/80 p-8 shadow-[0_20px_50px_rgba(15,23,42,0.08)]">
-          <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-            <div className="max-w-2xl">
-              <div className="inline-flex items-center gap-2 rounded-full border border-cyan-200 bg-cyan-50 px-3 py-1 text-sm font-semibold text-cyan-700">
-                <Lock className="h-4 w-4" /> x402 Premium Insights
-              </div>
-              <h1 className="mt-4 text-4xl font-semibold text-slate-900">Unlock elite football intelligence with an Injective testnet payment.</h1>
-              <p className="mt-3 text-lg text-slate-600">Connect a wallet, pay 1 INJ, verify the transaction server-side, and unlock a premium scouting report generated for your demo.</p>
+  <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,rgba(34,211,238,0.10),transparent_35%),radial-gradient(circle_at_top_right,rgba(59,130,246,0.08),transparent_32%),linear-gradient(135deg,#f8fbff,#eef4ff)] py-24">
+    <div className="mx-auto flex max-w-7xl flex-col gap-8">
+      <GlassCard className="rounded-[32px] border border-slate-200/80 bg-white/90 p-8 shadow-[0_20px_50px_rgba(15,23,42,0.08)]">
+        <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+          <div className="max-w-2xl">
+            <div className="inline-flex items-center gap-2 rounded-full border border-cyan-200 bg-cyan-50 px-3 py-1 text-sm font-semibold text-cyan-700">
+              <Lock className="h-4 w-4" /> x402 Premium Insights
             </div>
-
-            <div className="rounded-3xl border border-slate-200 bg-slate-50 px-5 py-4">
-              <p className="text-sm uppercase tracking-[0.24em] text-slate-500">Unlock Price</p>
-              <p className="mt-2 text-3xl font-semibold text-slate-900">1 INJ</p>
-            </div>
+            <h1 className="mt-4 text-4xl font-semibold tracking-tight text-slate-900">
+              Unlock elite football intelligence with an Injective testnet payment.
+            </h1>
+            <p className="mt-3 text-lg leading-8 text-slate-600">
+              Connect a wallet, pay 1 INJ, verify the transaction server-side, and unlock a premium scouting report generated for your demo.
+            </p>
           </div>
 
-          <div className="mt-8 grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
-            <div className="rounded-3xl border border-slate-200 bg-slate-50 p-4">
-              <div className="flex items-center gap-2 text-sm font-semibold text-slate-700">
-                <Wallet className="h-4 w-4" /> Injective Wallet
-              </div>
-              <input
-                value={walletAddress}
-                onChange={(event) => setWalletAddress(event.target.value)}
-                placeholder="inj1... or demo wallet"
-                className="mt-3 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 outline-none"
-              />
-              <div className="mt-4 flex flex-wrap items-center gap-3">
-                <button type="button" onClick={connectWallet} disabled={isLoading || !isAuthenticated} className="rounded-full bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60">
-                  {isConnected ? "Wallet Connected" : "Connect Wallet"}
-                </button>
-                <button
-                  type="button"
-                  onClick={disconnectWallet}
-                  disabled={!isConnected || isLoading}
-                  className="rounded-full border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-900 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-60"
-                >
-                  <span className="inline-flex items-center gap-2">
-                    <LogOut className="h-4 w-4" /> Disconnect
-                  </span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (hasPremium && !report) {
-                      fetchPremiumReport(walletAddress);
-                    } else {
-                      unlockReport();
-                    }
-                  }}
-                  disabled={
-                    isLoading ||
-                    !isAuthenticated ||
-                    !walletAddress.trim() ||
-                    (hasPremium && !!report)
+          <div className="rounded-[24px] border border-slate-200 bg-slate-50 px-5 py-4">
+            <p className="text-sm uppercase tracking-[0.24em] text-slate-500">Unlock Price</p>
+            <p className="mt-2 text-3xl font-semibold text-slate-900">1 INJ</p>
+          </div>
+        </div>
+
+        <div className="mt-8 grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
+          <div className="rounded-[24px] border border-slate-200 bg-slate-50 p-4">
+            <div className="flex items-center gap-2 text-sm font-semibold text-slate-700">
+              <Wallet className="h-4 w-4" /> Injective Wallet
+            </div>
+
+            <input
+              value={walletAddress}
+              onChange={(event) => setWalletAddress(event.target.value)}
+              placeholder="inj1... or demo wallet"
+              className="mt-3 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 outline-none placeholder:text-slate-400 focus:border-cyan-300 focus:ring-2 focus:ring-cyan-100"
+            />
+
+            <div className="mt-4 flex flex-wrap items-center gap-3">
+              <button
+                type="button"
+                onClick={connectWallet}
+                disabled={isLoading || !isAuthenticated}
+                className="rounded-full bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {isConnected ? "Wallet Connected" : "Connect Wallet"}
+              </button>
+
+              <button
+                type="button"
+                onClick={disconnectWallet}
+                disabled={!isConnected || isLoading}
+                className="rounded-full border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-900 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                <span className="inline-flex items-center gap-2">
+                  <LogOut className="h-4 w-4" /> Disconnect
+                </span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  if (hasPremium && !report) {
+                    fetchPremiumReport(walletAddress);
+                  } else {
+                    unlockReport();
                   }
-                  className="relative overflow-hidden rounded-full bg-cyan-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-cyan-500 disabled:cursor-not-allowed disabled:opacity-60"
-                >
-                  <span className="pointer-events-none absolute inset-0 bg-white/10 backdrop-blur-sm" />
-                  <span className="relative inline-flex items-center gap-2">
-                    <Lock className="h-4 w-4" />
-                    {hasPremium ? (report ? "Premium Unlocked" : "Show premium report") : "Pay 1 INJ"}
-                  </span>
-                </button>
-              </div>
-            </div>
-
-            <div className="rounded-3xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
-              <p className="font-semibold text-slate-900">Demo flow</p>
-              <ul className="mt-3 space-y-2">
-                <li>1. Connect or paste an Injective-style wallet address.</li>
-                <li>2. Pay 1 INJ to the demo recipient.</li>
-                <li>3. The backend verifies the payment metadata and unlocks the premium report.</li>
-              </ul>
-              <div className="mt-4 rounded-2xl border border-cyan-200 bg-cyan-50 p-3 text-sm text-cyan-800">
-                {statusMessage}
-                {!isAuthenticated ? (
-                  <p className="mt-2 text-xs text-slate-600">
-                    Login first to enable premium wallet payment.
-                  </p>
-                ) : null}
-              </div>
-              {txHash ? <div className="mt-3 text-xs text-slate-500">Tx hash: {txHash}</div> : null}
+                }}
+                disabled={
+                  isLoading ||
+                  !isAuthenticated ||
+                  !walletAddress.trim() ||
+                  (hasPremium && !!report)
+                }
+                className="relative overflow-hidden rounded-full bg-cyan-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-cyan-500 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                <span className="pointer-events-none absolute inset-0 bg-white/10 backdrop-blur-sm" />
+                <span className="relative inline-flex items-center gap-2">
+                  <Lock className="h-4 w-4" />
+                  {hasPremium ? (report ? "Premium Unlocked" : "Show premium report") : "Pay 1 INJ"}
+                </span>
+              </button>
             </div>
           </div>
 
-          {error ? <p className="mt-4 text-sm font-medium text-rose-600">{error}</p> : null}
-        </GlassCard>
+          <div className="rounded-[24px] border border-slate-200 bg-slate-50 p-4 text-sm text-slate-600">
+            <p className="font-semibold text-slate-900">Demo flow</p>
+            <ul className="mt-3 space-y-2">
+              <li>1. Connect or paste an Injective-style wallet address.</li>
+              <li>2. Pay 1 INJ to the demo recipient.</li>
+              <li>3. The backend verifies the payment metadata and unlocks the premium report.</li>
+            </ul>
 
-        <GlassCard className="rounded-4xl border border-white/10 bg-slate-950/90 p-8 shadow-[0_40px_120px_rgba(15,23,42,0.45)]">
-          {canViewPremiumContent ? (
-            <div className="space-y-8 text-slate-100">
-              <section className="rounded-4xl border border-white/10 bg-white/5 p-8 backdrop-blur">
-                <div className="flex flex-col gap-6 xl:flex-row xl:items-end xl:justify-between">
-                  <div className="max-w-3xl space-y-4">
-                    <span className="inline-flex items-center gap-2 rounded-full border border-cyan-500/30 bg-cyan-500/10 px-4 py-2 text-sm font-semibold uppercase tracking-[0.3em] text-cyan-300">
-                      <ShieldCheck className="h-4 w-4 text-cyan-300" /> Premium War Room
-                    </span>
-                    <h2 className="text-4xl font-semibold tracking-tight text-white">World Cup Final Review for elite decision making</h2>
-                    <p className="max-w-2xl text-sm leading-7 text-slate-300">
-                      Review final-tournament analytics, momentum heatmaps, injury impact, and decisive performance signals from the completed World Cup.
-                    </p>
-                  </div>
-                  <div className="rounded-full border border-white/10 bg-white/5 px-5 py-3 text-sm font-semibold text-slate-200">
-                    Upset chance: {teamSummary.upsetChance}%
-                  </div>
+            <div className="mt-4 rounded-2xl border border-cyan-200 bg-cyan-50 p-3 text-sm text-cyan-800">
+              {statusMessage}
+              {!isAuthenticated ? (
+                <p className="mt-2 text-xs text-slate-600">
+                  Login first to enable premium wallet payment.
+                </p>
+              ) : null}
+            </div>
+
+            {txHash ? (
+              <div className="mt-3 text-xs text-slate-500">Tx hash: {txHash}</div>
+            ) : null}
+          </div>
+        </div>
+
+        {error ? <p className="mt-4 text-sm font-medium text-rose-600">{error}</p> : null}
+      </GlassCard>
+
+      <GlassCard className="rounded-[32px] border border-slate-200/80 bg-white/90 p-8 shadow-[0_20px_50px_rgba(15,23,42,0.08)]">
+        {canViewPremiumContent ? (
+          <div className="space-y-8">
+            <section className="rounded-[32px] border border-slate-200 bg-slate-50 p-8">
+              <div className="flex flex-col gap-6 xl:flex-row xl:items-end xl:justify-between">
+                <div className="max-w-3xl space-y-4">
+                  <span className="inline-flex items-center gap-2 rounded-full border border-cyan-200 bg-cyan-50 px-4 py-2 text-sm font-semibold uppercase tracking-[0.3em] text-cyan-700">
+                    <ShieldCheck className="h-4 w-4 text-cyan-700" /> Premium War Room
+                  </span>
+                  <h2 className="text-4xl font-semibold tracking-tight text-slate-900">
+                    World Cup Final Review for elite decision making
+                  </h2>
+                  <p className="max-w-2xl text-sm leading-7 text-slate-600">
+                    Review final-tournament analytics, momentum heatmaps, injury impact, and decisive performance signals from the completed World Cup.
+                  </p>
                 </div>
-              </section>
 
-              <div className="grid gap-6">
-                <div className="space-y-6">
+                <div className="rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700">
+                  Upset chance: {teamSummary.upsetChance}%
+                </div>
+              </div>
+            </section>
 
-                  <div className="grid gap-6 lg:grid-cols-[1fr_1fr]">
-                    <GlassCard className="border-white/10 bg-slate-900/90 p-6">
+            <div className="grid gap-6">
+              <div className="space-y-6">
+                <div className="grid gap-6 lg:grid-cols-[1fr_1fr]">
+                  <GlassCard className="border border-slate-200 bg-white p-6 shadow-none">
                     <div className="flex items-center justify-between gap-4">
                       <div>
-                        <p className="text-sm uppercase tracking-[0.3em] text-slate-400">Injury impact</p>
-                        <h3 className="mt-2 text-2xl font-semibold text-white">Roster health</h3>
+                        <p className="text-sm uppercase tracking-[0.3em] text-slate-500">Injury impact</p>
+                        <h3 className="mt-2 text-2xl font-semibold text-slate-900">Roster health</h3>
                       </div>
-                      <ShieldAlert className="h-5 w-5 text-amber-400" />
+                      <ShieldAlert className="h-5 w-5 text-amber-500" />
                     </div>
+
                     <div className="mt-6 space-y-4">
                       {injuries.map((item) => (
-                        <div key={item.player} className="rounded-3xl border border-white/10 bg-slate-950/90 p-4">
+                        <div
+                          key={item.player}
+                          className="rounded-[24px] border border-slate-200 bg-slate-50 p-4"
+                        >
                           <div className="flex items-center justify-between gap-4">
                             <div>
-                              <p className="font-semibold text-white">{item.player}</p>
+                              <p className="font-semibold text-slate-900">{item.player}</p>
                               <p className="text-sm text-slate-500">{item.status}</p>
                             </div>
-                            <span className={`rounded-full px-3 py-1 text-xs font-semibold uppercase ${item.impact === "Low" ? "bg-emerald-500/15 text-emerald-300" : "bg-amber-500/15 text-amber-300"}`}>
+                            <span
+                              className={`rounded-full px-3 py-1 text-xs font-semibold uppercase ${
+                                item.impact === "Low"
+                                  ? "bg-emerald-100 text-emerald-700"
+                                  : "bg-amber-100 text-amber-700"
+                              }`}
+                            >
                               {item.impact}
                             </span>
                           </div>
                         </div>
                       ))}
                     </div>
-                    </GlassCard>
+                  </GlassCard>
 
-                    <GlassCard className="border-white/10 bg-slate-900/90 p-6">
+                  <GlassCard className="border border-slate-200 bg-white p-6 shadow-none">
                     <div className="flex items-center justify-between gap-4">
                       <div>
-                        <p className="text-sm uppercase tracking-[0.3em] text-slate-400">Performance radar</p>
-                        <h3 className="mt-2 text-2xl font-semibold text-white">Team strengths</h3>
+                        <p className="text-sm uppercase tracking-[0.3em] text-slate-500">Performance radar</p>
+                        <h3 className="mt-2 text-2xl font-semibold text-slate-900">Team strengths</h3>
                       </div>
-                      <span className="rounded-full bg-white/5 px-3 py-1 text-xs uppercase tracking-[0.24em] text-slate-300">Real-time</span>
+                      <span className="rounded-full bg-slate-100 px-3 py-1 text-xs uppercase tracking-[0.24em] text-slate-500">
+                        Real-time
+                      </span>
                     </div>
-                    <div className="mt-6 h-105">
+
+                    <div className="mt-6 h-[420px]">
                       <ResponsiveContainer width="100%" height="100%">
                         <RadarChart cx="50%" cy="50%" outerRadius="75%" data={radarData}>
-                          <PolarGrid stroke="#334155" />
-                          <PolarAngleAxis dataKey="metric" tick={{ fill: "#cbd5e1", fontSize: 12 }} />
+                          <PolarGrid stroke="#e2e8f0" />
+                          <PolarAngleAxis dataKey="metric" tick={{ fill: "#475569", fontSize: 12 }} />
                           <PolarRadiusAxis angle={30} tick={{ fill: "#94a3b8", fontSize: 11 }} />
-                          <Radar name="Spain" dataKey="Spain" stroke="#ef4444" fill="#f97316" fillOpacity={0.28} />
-                          <Radar name="Argentina" dataKey="Argentina" stroke="#0284c7" fill="#38bdf8" fillOpacity={0.18} />
-                          <Tooltip contentStyle={{ background: "#0f172a", border: "1px solid rgba(148,163,184,0.2)", borderRadius: 12 }} />
+                          <Radar
+                            name="Spain"
+                            dataKey="Spain"
+                            stroke="#f97316"
+                            fill="#fb923c"
+                            fillOpacity={0.20}
+                          />
+                          <Radar
+                            name="Argentina"
+                            dataKey="Argentina"
+                            stroke="#0284c7"
+                            fill="#38bdf8"
+                            fillOpacity={0.14}
+                          />
+                          <Tooltip
+                            contentStyle={{
+                              background: "#ffffff",
+                              border: "1px solid #e2e8f0",
+                              borderRadius: 12,
+                              color: "#0f172a",
+                            }}
+                          />
                         </RadarChart>
                       </ResponsiveContainer>
                     </div>
                   </GlassCard>
+                </div>
+
+                <GlassCard className="grid gap-6 border border-slate-200 bg-white p-6 lg:grid-cols-[0.95fr_0.85fr] shadow-none">
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between gap-4">
+                      <div>
+                        <h3 className="text-xl font-semibold text-slate-900">Team comparison</h3>
+                        <p className="text-sm text-slate-500">Select a profile to inspect momentum and tactical outlook.</p>
+                      </div>
+                      <div className="flex items-center gap-2 rounded-full bg-cyan-50 px-4 py-2 text-xs uppercase tracking-[0.24em] text-cyan-700">
+                        <Zap className="h-4 w-4 text-cyan-600" /> Live scouting
+                      </div>
+                    </div>
+
+                    <div className="grid gap-3 sm:grid-cols-2">
+                      {teamComparison.map((team) => (
+                        <button
+                          key={team.id}
+                          type="button"
+                          onClick={() => setSelectedTeam(team.id)}
+                          className={`rounded-[24px] border px-4 py-4 text-left transition ${
+                            selectedTeam === team.id
+                              ? "border-cyan-300 bg-cyan-50"
+                              : "border-slate-200 bg-white hover:border-cyan-200"
+                          }`}
+                        >
+                          <div className="flex items-center justify-between gap-4">
+                            <div>
+                              <p className="text-sm font-semibold text-slate-900">{team.name}</p>
+                              <p className="mt-1 text-xs uppercase tracking-[0.24em] text-slate-500">
+                                FIFA rating
+                              </p>
+                            </div>
+                            <span className="text-2xl font-semibold text-slate-900">{team.rating}</span>
+                          </div>
+
+                          <div className="mt-4 grid gap-3 text-sm text-slate-600">
+                            <div className="flex items-center justify-between">
+                              <span>Form</span>
+                              <span>{team.form}</span>
+                            </div>
+                            <div className="flex items-center justify-between">
+                              <span>xG</span>
+                              <span>{team.expectedGoals.toFixed(1)}</span>
+                            </div>
+                            <div className="flex items-center justify-between">
+                              <span>Momentum</span>
+                              <span>{team.momentum}%</span>
+                            </div>
+                          </div>
+                        </button>
+                      ))}
+                    </div>
                   </div>
-                  
 
-                  <GlassCard className="grid gap-6 border-white/10 bg-slate-900/90 p-6 lg:grid-cols-[0.95fr_0.85fr]">
-                    <div className="space-y-4">
-                      <div className="flex items-center justify-between gap-4">
-                        <div>
-                          <h3 className="text-xl font-semibold text-white">Team comparison</h3>
-                          <p className="text-sm text-slate-400">Select a profile to inspect momentum and tactical outlook.</p>
-                        </div>
-                        <div className="flex items-center gap-2 rounded-full bg-slate-950/80 px-4 py-2 text-xs uppercase tracking-[0.24em] text-slate-300">
-                          <Zap className="h-4 w-4 text-cyan-300" /> Live scouting
-                        </div>
+                  <div className="space-y-5 rounded-[28px] border border-slate-200 bg-slate-50 p-6">
+                    <div className="flex items-center justify-between gap-4">
+                      <div>
+                        <p className="text-sm uppercase tracking-[0.3em] text-slate-500">Selected profile</p>
+                        <h3 className="mt-2 text-2xl font-semibold text-slate-900">{selectedProfile.name}</h3>
                       </div>
+                      <span className="rounded-full bg-white px-3 py-1 text-xs uppercase tracking-[0.24em] text-slate-500">
+                        Priority
+                      </span>
+                    </div>
 
-                      <div className="grid gap-3 sm:grid-cols-2">
-                        {teamComparison.map((team) => (
-                          <button
-                            key={team.id}
-                            type="button"
-                            onClick={() => setSelectedTeam(team.id)}
-                            className={`rounded-3xl border px-4 py-4 text-left transition ${
-                              selectedTeam === team.id
-                                ? "border-cyan-400/50 bg-cyan-500/10"
-                                : "border-white/10 bg-slate-950/80 hover:border-white/20"
-                            }`}
-                          >
-                            <div className="flex items-center justify-between gap-4">
-                              <div>
-                                <p className="text-sm font-semibold text-white">{team.name}</p>
-                                <p className="mt-1 text-xs uppercase tracking-[0.24em] text-slate-400">FIFA rating</p>
-                              </div>
-                              <span className="text-2xl font-semibold text-white">{team.rating}</span>
-                            </div>
-                            <div className="mt-4 grid gap-3 text-sm text-slate-400">
-                              <div className="flex items-center justify-between">
-                                <span>Form</span>
-                                <span>{team.form}</span>
-                              </div>
-                              <div className="flex items-center justify-between">
-                                <span>xG</span>
-                                <span>{team.expectedGoals.toFixed(1)}</span>
-                              </div>
-                              <div className="flex items-center justify-between">
-                                <span>Momentum</span>
-                                <span>{team.momentum}%</span>
-                              </div>
-                            </div>
-                          </button>
-                        ))}
+                    <div className="grid gap-3 text-sm text-slate-700">
+                      <div className="flex items-center justify-between rounded-[20px] bg-white px-4 py-3">
+                        <span>Possession</span>
+                        <span>{selectedProfile.possession}%</span>
+                      </div>
+                      <div className="flex items-center justify-between rounded-[20px] bg-white px-4 py-3">
+                        <span>Expected goals</span>
+                        <span>{selectedProfile.expectedGoals.toFixed(1)}</span>
+                      </div>
+                      <div className="flex items-center justify-between rounded-[20px] bg-white px-4 py-3">
+                        <span>Momentum</span>
+                        <span>{selectedProfile.momentum}%</span>
+                      </div>
+                    </div>
+                  </div>
+                </GlassCard>
+
+                <GlassCard className="grid gap-6 border border-slate-200 bg-white p-6 xl:grid-cols-[1fr_0.95fr] shadow-none">
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-3 text-sm uppercase tracking-[0.3em] text-slate-500">
+                      <BarChart2 className="h-4 w-4 text-cyan-600" /> Probability & upset pressure
+                    </div>
+
+                    <div className="h-72">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <BarChart data={barData} margin={{ top: 8, right: 8, left: -10, bottom: 0 }}>
+                          <CartesianGrid stroke="#e2e8f0" opacity={0.7} vertical={false} />
+                          <XAxis dataKey="name" tick={{ fill: "#475569", fontSize: 12 }} axisLine={false} tickLine={false} />
+                          <YAxis tick={{ fill: "#475569", fontSize: 12 }} axisLine={false} tickLine={false} />
+                          <Tooltip
+                            contentStyle={{
+                              background: "#ffffff",
+                              border: "1px solid #e2e8f0",
+                              borderRadius: 12,
+                              color: "#0f172a",
+                            }}
+                          />
+                          <Bar dataKey="probability" radius={[12, 12, 0, 0]}>
+                            {barData.map((entry) => (
+                              <Cell
+                                key={`${entry.name}-probability`}
+                                fill={entry.name === "Spain" ? "#f97316" : "#38bdf8"}
+                              />
+                            ))}
+                          </Bar>
+                          <Bar dataKey="upset" radius={[12, 12, 0, 0]} fill="#fb7185" />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4 rounded-[28px] border border-slate-200 bg-slate-50 p-6">
+                    <div className="flex items-center justify-between gap-4">
+                      <div>
+                        <p className="text-sm uppercase tracking-[0.3em] text-slate-500">Match momentum</p>
+                        <h3 className="mt-2 text-xl font-semibold text-slate-900">Phase control</h3>
                       </div>
                     </div>
 
-                    <div className="space-y-5 rounded-4xl border border-white/10 bg-slate-950/90 p-6">
-                      <div className="flex items-center justify-between gap-4">
-                        <div>
-                          <p className="text-sm uppercase tracking-[0.3em] text-slate-400">Selected profile</p>
-                          <h3 className="mt-2 text-2xl font-semibold text-white">{selectedProfile.name}</h3>
-                        </div>
-                        <span className="rounded-full bg-white/5 px-3 py-1 text-xs uppercase tracking-[0.24em] text-slate-300">Priority</span>
-                      </div>
-                      <div className="grid gap-3 text-sm text-slate-300">
-                        <div className="flex items-center justify-between rounded-3xl bg-white/5 px-4 py-3">
-                          <span>Possession</span>
-                          <span>{selectedProfile.possession}%</span>
-                        </div>
-                        <div className="flex items-center justify-between rounded-3xl bg-white/5 px-4 py-3">
-                          <span>Expected goals</span>
-                          <span>{selectedProfile.expectedGoals.toFixed(1)}</span>
-                        </div>
-                        <div className="flex items-center justify-between rounded-3xl bg-white/5 px-4 py-3">
-                          <span>Momentum</span>
-                          <span>{selectedProfile.momentum}%</span>
-                        </div>
-                      </div>
+                    <div className="h-72">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <LineChart data={momentumTimeline} margin={{ top: 8, right: 18, left: -10, bottom: 0 }}>
+                          <CartesianGrid stroke="#e2e8f0" opacity={0.7} vertical={false} />
+                          <XAxis dataKey="phase" tick={{ fill: "#475569", fontSize: 12 }} axisLine={false} tickLine={false} />
+                          <YAxis tick={{ fill: "#475569", fontSize: 12 }} axisLine={false} tickLine={false} />
+                          <Tooltip
+                            contentStyle={{
+                              background: "#ffffff",
+                              border: "1px solid #e2e8f0",
+                              borderRadius: 12,
+                              color: "#0f172a",
+                            }}
+                          />
+                          <Line type="monotone" dataKey="Spain" stroke="#f97316" strokeWidth={3} dot={false} />
+                          <Line type="monotone" dataKey="Argentina" stroke="#0284c7" strokeWidth={3} dot={false} />
+                        </LineChart>
+                      </ResponsiveContainer>
                     </div>
-                  </GlassCard>
+                  </div>
+                </GlassCard>
 
-                  <GlassCard className="grid gap-6 border-white/10 bg-slate-900/90 p-6 xl:grid-cols-[1fr_0.95fr]">
-                    <div className="space-y-4">
-                      <div className="flex items-center gap-3 text-sm uppercase tracking-[0.3em] text-slate-400">
-                        <BarChart2 className="h-4 w-4 text-cyan-300" /> Probability & upset pressure
-                      </div>
-                      <div className="h-72">
-                        <ResponsiveContainer width="100%" height="100%">
-                          <BarChart data={barData} margin={{ top: 8, right: 8, left: -10, bottom: 0 }}>
-                            <CartesianGrid opacity={0.12} vertical={false} />
-                            <XAxis dataKey="name" tick={{ fill: "#94a3b8", fontSize: 12 }} axisLine={false} tickLine={false} />
-                            <YAxis tick={{ fill: "#94a3b8", fontSize: 12 }} axisLine={false} tickLine={false} />
-                            <Tooltip contentStyle={{ background: "#0f172a", border: "1px solid rgba(148,163,184,0.2)", borderRadius: 12 }} />
-                            <Bar dataKey="probability" radius={[12, 12, 0, 0]}>
-                              {barData.map((entry) => (
-                                <Cell key={`${entry.name}-probability`} fill={entry.name === "Spain" ? "#f97316" : "#38bdf8"} />
-                              ))}
-                            </Bar>
-                            <Bar dataKey="upset" radius={[12, 12, 0, 0]} fill="#fb7185" />
-                          </BarChart>
-                        </ResponsiveContainer>
-                      </div>
-                    </div>
-
-                    <div className="space-y-4 rounded-4xl border border-white/10 bg-slate-950/90 p-6">
-                      <div className="flex items-center justify-between gap-4">
-                        <div>
-                          <p className="text-sm uppercase tracking-[0.3em] text-slate-400">Match momentum</p>
-                          <h3 className="mt-2 text-xl font-semibold text-white">Phase control</h3>
-                        </div>
-                      </div>
-                      <div className="h-72">
-                        <ResponsiveContainer width="100%" height="100%">
-                          <LineChart data={momentumTimeline} margin={{ top: 8, right: 18, left: -10, bottom: 0 }}>
-                            <CartesianGrid opacity={0.12} vertical={false} />
-                            <XAxis dataKey="phase" tick={{ fill: "#94a3b8", fontSize: 12 }} axisLine={false} tickLine={false} />
-                            <YAxis tick={{ fill: "#94a3b8", fontSize: 12 }} axisLine={false} tickLine={false} />
-                            <Tooltip contentStyle={{ background: "#0f172a", border: "1px solid rgba(148,163,184,0.2)", borderRadius: 12 }} />
-                            <Line type="monotone" dataKey="Spain" stroke="#ef4444" strokeWidth={3} dot={false} />
-                            <Line type="monotone" dataKey="Argentina" stroke="#0284c7" strokeWidth={3} dot={false} />
-                          </LineChart>
-                        </ResponsiveContainer>
-                      </div>
-                    </div>
-                  </GlassCard>
-
-                  {report ? (
+                {report ? (
                   <div className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
-                    <GlassCard className="rounded-4xl border border-slate-200/80 bg-white/80 p-8">
+                    <GlassCard className="rounded-[32px] border border-slate-200/80 bg-white/90 p-8 shadow-none">
                       <p className="text-sm uppercase tracking-[0.24em] text-slate-500">Report</p>
                       <h2 className="mt-3 text-2xl font-semibold text-slate-900">{report.title}</h2>
                       <p className="mt-3 text-slate-600">{report.summary}</p>
 
                       <div className="mt-6 space-y-4">
                         {report.scouting.map((item, index) => (
-                          <div key={`${item.team}-${index}`} className="rounded-3xl border border-slate-200 bg-slate-50 p-4">
+                          <div
+                            key={`${item.team}-${index}`}
+                            className="rounded-[24px] border border-slate-200 bg-slate-50 p-4"
+                          >
                             <div className="flex items-center justify-between gap-3">
                               <h3 className="font-semibold text-slate-900">{item.team}</h3>
-                              <span className="rounded-full bg-cyan-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-cyan-700">{item.signal}</span>
+                              <span className="rounded-full bg-cyan-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-cyan-700">
+                                {item.signal}
+                              </span>
                             </div>
                             <p className="mt-2 text-sm font-medium text-slate-700">{item.headline}</p>
                             <p className="mt-1 text-sm text-slate-600">{item.detail}</p>
@@ -811,28 +887,37 @@ export default function PremiumPage() {
                       </div>
                     </GlassCard>
 
-                    <GlassCard className="rounded-4xl border border-slate-200/80 bg-white/80 p-8">
+                    <GlassCard className="rounded-[32px] border border-slate-200/80 bg-white/90 p-8 shadow-none">
                       <h2 className="text-2xl font-semibold text-slate-900">Tactical & simulation intelligence</h2>
 
-                      <div className="mt-6 rounded-3xl border border-slate-200 bg-slate-50 p-4">
+                      <div className="mt-6 rounded-[24px] border border-slate-200 bg-slate-50 p-4">
                         <p className="text-sm uppercase tracking-[0.24em] text-slate-500">Simulation Summary</p>
                         <div className="mt-3 flex items-center justify-between">
                           <span className="text-slate-600">Favorite</span>
-                          <span className="font-semibold text-slate-900">{report.simulationSummary.favorite}</span>
+                          <span className="font-semibold text-slate-900">
+                            {report.simulationSummary.favorite}
+                          </span>
                         </div>
                         <div className="mt-2 flex items-center justify-between">
                           <span className="text-slate-600">Upset Chance</span>
-                          <span className="font-semibold text-slate-900">{report.simulationSummary.upsetChance}</span>
+                          <span className="font-semibold text-slate-900">
+                            {report.simulationSummary.upsetChance}
+                          </span>
                         </div>
                         <div className="mt-2 flex items-center justify-between">
                           <span className="text-slate-600">Confidence</span>
-                          <span className="font-semibold text-slate-900">{report.simulationSummary.confidence}</span>
+                          <span className="font-semibold text-slate-900">
+                            {report.simulationSummary.confidence}
+                          </span>
                         </div>
                       </div>
 
                       <div className="mt-6 space-y-3">
                         {report.tacticalAnalysis.map((item) => (
-                          <div key={item.title} className="rounded-3xl border border-slate-200 bg-slate-50 p-4">
+                          <div
+                            key={item.title}
+                            className="rounded-[24px] border border-slate-200 bg-slate-50 p-4"
+                          >
                             <h3 className="font-semibold text-slate-900">{item.title}</h3>
                             <p className="mt-1 text-sm text-slate-600">{item.detail}</p>
                           </div>
@@ -841,7 +926,10 @@ export default function PremiumPage() {
 
                       <div className="mt-6 space-y-3">
                         {report.matchBreakdown.map((item) => (
-                          <div key={item.fixture} className="rounded-3xl border border-slate-200 bg-slate-50 p-4">
+                          <div
+                            key={item.fixture}
+                            className="rounded-[24px] border border-slate-200 bg-slate-50 p-4"
+                          >
                             <p className="text-sm font-semibold text-slate-900">{item.fixture}</p>
                             <p className="mt-1 text-sm text-slate-600">{item.insight}</p>
                           </div>
@@ -850,38 +938,38 @@ export default function PremiumPage() {
                     </GlassCard>
                   </div>
                 ) : null}
- 
-                </div>
               </div>
             </div>
-          ) : (
-            <div className="rounded-4xl border border-white/10 bg-slate-900/90 p-10 text-slate-100">
-              <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
-                <div className="space-y-4">
-                  <span className="inline-flex items-center gap-2 rounded-full border border-cyan-500/30 bg-cyan-500/10 px-4 py-2 text-sm font-semibold uppercase tracking-[0.3em] text-cyan-300">
-                    <Lock className="h-4 w-4" /> Premium access required
-                  </span>
-                  <h2 className="text-3xl font-semibold text-white">Unlock the premium war-room experience</h2>
-                  <p className="max-w-2xl text-sm leading-7 text-slate-300">
-                    Once the wallet payment is verified, this section will show the full final recap, tactical charts, team comparison, and injury insights.
-                  </p>
-                </div>
-                <div className="rounded-3xl border border-white/10 bg-slate-950/90 p-6">
-                  <p className="text-sm uppercase tracking-[0.3em] text-slate-400">What becomes available</p>
-                  <ul className="mt-4 space-y-3 text-sm text-slate-300">
-                    <li>• Match recap and prediction summary</li>
-                    <li>• Momentum and probability charts</li>
-                    <li>• Team comparison and tactical overlays</li>
-                    <li>• Injury impact and roster health insights</li>
-                  </ul>
-                </div>
+          </div>
+        ) : (
+          <div className="rounded-[32px] border border-slate-200/80 bg-white/90 p-10 text-slate-900 shadow-[0_20px_50px_rgba(15,23,42,0.08)]">
+            <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+              <div className="space-y-4">
+                <span className="inline-flex items-center gap-2 rounded-full border border-cyan-200 bg-cyan-50 px-4 py-2 text-sm font-semibold uppercase tracking-[0.3em] text-cyan-700">
+                  <Lock className="h-4 w-4" /> Premium access required
+                </span>
+                <h2 className="text-3xl font-semibold text-slate-900">
+                  Unlock the premium war-room experience
+                </h2>
+                <p className="max-w-2xl text-sm leading-7 text-slate-600">
+                  Once the wallet payment is verified, this section will show the full final recap, tactical charts, team comparison, and injury insights.
+                </p>
               </div>
-            </div>
-          )}
-        </GlassCard>
 
-        
-      </div>
+              <div className="rounded-[24px] border border-slate-200 bg-slate-50 p-6">
+                <p className="text-sm uppercase tracking-[0.3em] text-slate-500">What becomes available</p>
+                <ul className="mt-4 space-y-3 text-sm text-slate-600">
+                  <li>• Match recap and prediction summary</li>
+                  <li>• Momentum and probability charts</li>
+                  <li>• Team comparison and tactical overlays</li>
+                  <li>• Injury impact and roster health insights</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        )}
+      </GlassCard>
     </div>
-  );
+  </div>
+);
 }
