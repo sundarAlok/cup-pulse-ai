@@ -3,38 +3,85 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Mail, KeyRound, Fingerprint, ArrowRight } from "lucide-react";
+import { signInWithEmail, signInWithGoogle } from "@/firebase";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [secretWords, setSecretWords] = useState("");
+  const [loading, setLoading] = useState(false);
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
+    setLoading(true);
 
-    const res = await fetch("/api/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email,
-        password,
-        secretWords,
-      }),
-    });
+    try {
+      const result = await signInWithEmail(email, password);
+      const user = result.user;
 
-    const data = await res.json();
+      const res = await fetch("/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          uid: user.uid,
+          email: user.email ?? email,
+          username: user.displayName ?? email.split("@")[0],
+          displayName: user.displayName ?? email.split("@")[0],
+          photoURL: user.photoURL ?? "",
+          secretWords,
+        }),
+      });
 
-    alert(data.message);
+      const data = await res.json();
+      alert(data.message);
 
-    if (data.success) {
-      window.location.href = "/";
+      if (data.success) {
+        window.location.href = "/";
+      }
+    } catch (error) {
+      alert(error instanceof Error ? error.message : "Unable to sign in.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleGoogleSignIn() {
+    setLoading(true);
+
+    try {
+      const result = await signInWithGoogle();
+      const user = result.user;
+
+      const res = await fetch("/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          uid: user.uid,
+          email: user.email ?? "",
+          username:
+            user.displayName ?? user.email?.split("@")[0] ?? "Google User",
+          displayName:
+            user.displayName ?? user.email?.split("@")[0] ?? "Google User",
+          photoURL: user.photoURL ?? "",
+          secretWords: secretWords || "google sign in",
+        }),
+      });
+
+      const data = await res.json();
+      alert(data.message);
+
+      if (data.success) {
+        window.location.href = "/";
+      }
+    } catch (error) {
+      alert(error instanceof Error ? error.message : "Google sign-in failed.");
+    } finally {
+      setLoading(false);
     }
   }
 
   return (
-    <div className="relative h-screen w-full overflow-hidden">
+    <div className="relative min-h-screen w-full overflow-hidden">
       {/* Background Image */}
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
@@ -53,7 +100,7 @@ export default function LoginPage() {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 flex h-full w-full items-center px-4 sm:px-6 lg:px-30">
+      <div className="relative z-10 flex min-h-screen w-full items-center px-4 sm:px-6 lg:px-30">
         <div className="grid w-full items-center gap-10 lg:grid-cols-2 lg:gap-16">
           {/* Left Side */}
           <div className="max-w-2xl text-center lg:text-left">
@@ -72,7 +119,7 @@ export default function LoginPage() {
           </div>
 
           {/* Right Side Login Card */}
-          <div className="flex justify-center lg:justify-end mt-14">
+          <div className="mt-10 flex justify-center lg:mt-14 lg:justify-end">
             <div
               className="
                 w-full
@@ -85,10 +132,11 @@ export default function LoginPage() {
                 py-5
                 backdrop-blur-2xl
                 shadow-[0_25px_80px_rgba(0,0,0,0.35)]
-                sm:p-8
+                sm:px-8
+                sm:py-7
               "
             >
-              <div className="mb-7 text-center">
+              <div className="mb-6 text-center">
                 <h2 className="text-3xl font-bold text-white">Welcome Back</h2>
                 <p className="mt-2 text-sm text-slate-300">
                   Sign in to access premium football intelligence
@@ -193,38 +241,65 @@ export default function LoginPage() {
                   </div>
                 </div>
 
-                {/* Login Button */}
-                <button
-                  type="submit"
-                  className="
-                    group
-                    mt-4
-                    flex
-                    w-full
-                    items-center
-                    justify-center
-                    gap-2
-                    rounded-3xl
-                    bg-gradient-to-r
-                    from-cyan-500
-                    via-blue-600
-                    to-violet-600
-                    py-2.5
-                    font-semibold
-                    text-white
-                    shadow-[0_10px_30px_rgba(59,130,246,0.35)]
-                    transition-all
-                    duration-300
-                    hover:scale-[1.02]
-                  "
-                >
-                  Login
-                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                </button>
+                {/* Buttons Row */}
+                <div className="grid grid-cols-2 gap-3 pt-2">
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="
+                      group
+                      flex
+                      items-center
+                      justify-center
+                      gap-2
+                      rounded-3xl
+                      bg-gradient-to-r
+                      from-cyan-500
+                      via-blue-600
+                      to-violet-600
+                      py-2.5
+                      font-semibold
+                      text-white
+                      shadow-[0_10px_30px_rgba(59,130,246,0.35)]
+                      transition-all
+                      duration-300
+                      hover:scale-[1.02]
+                      disabled:cursor-not-allowed
+                      disabled:opacity-70
+                    "
+                  >
+                    {loading ? "Signing in..." : "Login"}
+                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={handleGoogleSignIn}
+                    disabled={loading}
+                    className="
+                      flex
+                      items-center
+                      justify-center
+                      rounded-3xl
+                      border
+                      border-white/20
+                      bg-white/10
+                      py-2.5
+                      font-semibold
+                      text-white
+                      transition
+                      hover:bg-white/20
+                      disabled:cursor-not-allowed
+                      disabled:opacity-70
+                    "
+                  >
+                    With Google
+                  </button>
+                </div>
               </form>
 
               {/* Footer */}
-              <div className="mt-4 border-t border-white/10 pt-5 text-center">
+              <div className="mt-4 border-t border-white/10 pt-4 text-center">
                 <p className="text-sm text-slate-300">
                   Don&apos;t have an account?{" "}
                   <Link

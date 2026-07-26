@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { generatePremiumReport } from "@/lib/ai";
-import { getPremiumUnlockByWallet, hasPremiumAccess, recordPremiumUnlock } from "@/lib/db";
+import { getPremiumUnlock, recordPremiumUnlock } from "@/lib/firebaseStore";
 
 type VerifyPaymentBody = {
   wallet?: string;
@@ -58,20 +58,19 @@ export async function POST(req: NextRequest) {
       recipient: normalizedRecipient,
       status: normalizedStatus,
     });
-    console.log("RECORDING PREMIUM ACCESS");
-    console.log(getPremiumUnlockByWallet(wallet));
 
-    if (!hasPremiumAccess(wallet)) {
-      recordPremiumUnlock(wallet, txHash);
+    const existingUnlock = await getPremiumUnlock(wallet);
+    if (!existingUnlock) {
+      await recordPremiumUnlock(wallet, txHash);
     }
 
-    const premiumRecord = getPremiumUnlockByWallet(wallet);
+    const premiumRecord = await getPremiumUnlock(wallet);
     const report = await generatePremiumReport("Brazil");
 
     return NextResponse.json({
       success: true,
       report,
-      txHash: premiumRecord?.tx_hash ?? txHash,
+      txHash: premiumRecord?.txHash ?? txHash,
     });
   } catch (error) {
     console.error("Payment verification error:", error);

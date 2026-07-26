@@ -121,8 +121,41 @@ export async function getTeamStats(
 export async function predictMatch(
   team1: string,
   team2: string
-): Promise<{ prediction: string; confidence: string; reason: string }> {
-  const prompt = `Predict the winner of the upcoming football match between ${team1} and ${team2}. Return the name of the winning team, the confidence percentage, and a short reason.`;
+) {
+  const prompt = `
+You are a football analyst.
+
+Analyze:
+${team1} vs ${team2}
+
+Use:
+- current team strength
+- FIFA ranking
+- recent form
+- attacking performance
+- defensive performance
+- tournament history
+
+Return ONLY valid JSON.
+
+{
+  "prediction": "<winning team>",
+  "confidence": "<confidence percentage>",
+  "reason": "<short analysis>",
+  "homeWin": <number>,
+  "awayWin": <number>,
+  "draw": <number>
+}
+
+Rules:
+- prediction must be either "${team1}" or "${team2}"
+- confidence must be generated dynamically
+- homeWin, awayWin and draw must be generated dynamically
+- probabilities must total exactly 100
+- no markdown
+- no explanation outside JSON
+`;
+  
   return await generatePrediction(prompt);
 }
 

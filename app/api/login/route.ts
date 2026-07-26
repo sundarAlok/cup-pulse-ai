@@ -1,71 +1,44 @@
 import { NextRequest, NextResponse } from "next/server";
-import db from "@/lib/db";
-
-type User = {
-  id: number;
-  password: string;
-  secret_words: string;
-};
+import { ensureUserProfile } from "@/lib/firebaseStore";
 
 export async function POST(req: NextRequest) {
   try {
-    const {
+    const body = await req.json().catch(() => ({}));
+    const uid = typeof body?.uid === "string" ? body.uid.trim() : "";
+    const email = typeof body?.email === "string" ? body.email.trim().toLowerCase() : "";
+    const username = typeof body?.username === "string" ? body.username.trim() : "";
+    const displayName = typeof body?.displayName === "string" ? body.displayName.trim() : "";
+    const photoURL = typeof body?.photoURL === "string" ? body.photoURL : "";
+    const secretWords = typeof body?.secretWords === "string" ? body.secretWords.trim() : "";
+
+    if (!uid) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "A valid Firebase user id is required.",
+        },
+        { status: 400 }
+      );
+    }
+
+    await ensureUserProfile(uid, {
       email,
-      password,
+      username: username || displayName || email.split("@")[0] || `user-${uid.slice(0, 6)}`,
+      displayName: displayName || username || email.split("@")[0] || `user-${uid.slice(0, 6)}`,
+      photoURL: photoURL || null,
       secretWords,
-    } = await req.json();
-
-    const user = db
-      .prepare(
-        `
-        SELECT
-          id,
-          password,
-          secret_words
-        FROM users
-        WHERE email = ?
-      `
-      )
-      .get(email) as User | undefined;
-
-    if (!user) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "User not found.",
-        },
-        { status: 404 }
-      );
-    }
-
-    if (
-      user.password !== password ||
-      user.secret_words.trim() !==
-        secretWords.trim()
-    ) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Invalid credentials.",
-        },
-        { status: 401 }
-      );
-    }
+    });
 
     const response = NextResponse.json({
       success: true,
       message: "Login successful.",
     });
 
-    response.cookies.set(
-      "userId",
-      String(user.id),
-      {
-        httpOnly: true,
-        path: "/",
-        maxAge: 60 * 60 * 24 * 30,
-      }
-    );
+    response.cookies.set("userId", uid, {
+      httpOnly: true,
+      path: "/",
+      maxAge: 60 * 60 * 24 * 30,
+    });
 
     return response;
   } catch (error) {

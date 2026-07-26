@@ -16,17 +16,31 @@ import RewardCard from "@/components/RewardCard";
 export default function RewardsPage() {
   const [checkinLoading, setCheckinLoading] = useState(false);
   const [checkinMessage, setCheckinMessage] = useState("");
-  const [streak, setStreak] = useState(() => {
-    if (typeof window === "undefined") {
-      return 0;
+  const [streak, setStreak] = useState(0);
+
+  useEffect(() => {
+    async function loadLiveStreak() {
+      try {
+        const res = await fetch("/api/profile");
+        if (!res.ok) {
+          return;
+        }
+
+        const data = await res.json();
+        if (data?.profile?.streak != null) {
+          setStreak(Number(data.profile.streak) || 0);
+        }
+      } catch {
+        const saved = localStorage.getItem("cupPulseStreak");
+        if (saved) {
+          const value = Number(saved);
+          setTimeout(() => setStreak(value), 0);
+        }
+      }
     }
 
-    const saved = localStorage.getItem(
-      "cupPulseStreak"
-    );
-
-    return saved ? Number(saved) : 0;
-  });
+    void loadLiveStreak();
+  }, []);
 
   async function handleCheckin() {
     try {
@@ -55,13 +69,6 @@ export default function RewardsPage() {
       setCheckinLoading(false);
     }
   }
-
-  useEffect(() => {
-    localStorage.setItem(
-      "cupPulseStreak",
-      String(streak)
-    );
-  }, [streak]);
 
   useEffect(() => {
     localStorage.setItem(

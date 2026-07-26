@@ -1,22 +1,14 @@
-import db from "@/lib/db";
+import { getLeaderboardRows } from "@/lib/firebaseStore";
 
 type User = {
-  id: number;
+  id: string;
   username: string;
   points: number;
+  photoURL?: string | null;
 };
 
-export default function LeaderboardPage() {
-  const users = db
-    .prepare(
-      `
-      SELECT id, username, points
-      FROM users
-      ORDER BY points DESC
-      LIMIT 100
-    `
-    )
-    .all() as User[];
+export default async function LeaderboardPage() {
+  const users = (await getLeaderboardRows(100)) as User[];
 
   return (
     <div className="space-y-8 px-28 py-24">
@@ -38,6 +30,7 @@ export default function LeaderboardPage() {
         <table className="w-full">
           <thead className="bg-slate-50">
             <tr>
+              <th className="p-4 text-left">Photo</th>
               <th className="p-4 text-left">Rank</th>
               <th className="p-4 text-left">Username</th>
               <th className="p-4 text-right">Points</th>
@@ -50,6 +43,22 @@ export default function LeaderboardPage() {
                 key={user.id}
                 className="border-t border-slate-100"
               >
+                <td className="p-4">
+                  <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-slate-100">
+                    {user.photoURL ? (
+                      <img
+                        src={user.photoURL}
+                        alt={user.username}
+                        className="h-full w-full object-cover"
+                      />
+                    ) : (
+                      <span className="text-xs font-semibold text-slate-500">
+                        {user.username?.slice(0, 1).toUpperCase()}
+                      </span>
+                    )}
+                  </div>
+                </td>
+
                 <td className="p-4 font-bold">
                   #{index + 1}
                 </td>

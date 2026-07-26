@@ -1,21 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
-import db from "@/lib/db";
+import { ensureUserProfile } from "@/lib/firebaseStore";
 
 export async function POST(req: NextRequest) {
   try {
-    const {
-      username,
-      email,
-      password,
-      secretWords,
-    } = await req.json();
+    const body = await req.json().catch(() => ({}));
+    const uid = typeof body?.uid === "string" ? body.uid.trim() : "";
+    const username = typeof body?.username === "string" ? body.username.trim() : "";
+    const email = typeof body?.email === "string" ? body.email.trim().toLowerCase() : "";
+    const secretWords = typeof body?.secretWords === "string" ? body.secretWords.trim() : "";
 
-    if (
-      !username ||
-      !email ||
-      !password ||
-      !secretWords
-    ) {
+    if (!uid || !username || !email || !secretWords) {
       return NextResponse.json(
         {
           success: false,
@@ -25,61 +19,24 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const existingUser = db
-      .prepare(
-        `
-        SELECT id
-        FROM users
-        WHERE email = ?
-      `
-      )
-      .get(email);
-
-    if (existingUser) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Email already registered.",
-        },
-        { status: 400 }
-      );
-    }
-
-    const result = db
-      .prepare(
-        `
-        INSERT INTO users
-        (
-          username,
-          email,
-          password,
-          secret_words,
-          points
-        )
-        VALUES (?, ?, ?, ?, 0)
-      `
-      )
-      .run(
-        username,
-        email,
-        password,
-        secretWords.trim()
-      );
+    await ensureUserProfile(uid, {
+      email,
+      username,
+      displayName: username,
+      secretWords,
+      points: 0,
+    });
 
     const response = NextResponse.json({
       success: true,
       message: "Account created successfully.",
     });
 
-    response.cookies.set(
-      "userId",
-      String(result.lastInsertRowid),
-      {
-        httpOnly: true,
-        path: "/",
-        maxAge: 60 * 60 * 24 * 30,
-      }
-    );
+    response.cookies.set("userId", uid, {
+      httpOnly: true,
+      path: "/",
+      maxAge: 60 * 60 * 24 * 30,
+    });
 
     return response;
   } catch (error) {

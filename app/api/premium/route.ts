@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { buildPremiumReport } from "@/lib/premium";
-import { getPremiumUnlockByWallet, hasPremiumAccess } from "@/lib/db";
+import { getPremiumUnlock, recordPremiumUnlock } from "@/lib/firebaseStore";
 
 export async function POST(req: NextRequest) {
   try {
@@ -19,7 +19,9 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    if (!paid && !hasPremiumAccess(wallet)) {
+    const existingUnlock = wallet ? await getPremiumUnlock(wallet) : null;
+
+    if (!paid && !existingUnlock) {
       return NextResponse.json(
         {
           success: false,
@@ -29,13 +31,17 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    if (wallet && !existingUnlock) {
+      await recordPremiumUnlock(wallet, `0x${Date.now().toString(16)}${Math.random().toString(16).slice(2, 10)}`);
+    }
+
     const report = buildPremiumReport();
-    const premiumRecord = getPremiumUnlockByWallet(wallet);
+    const premiumRecord = wallet ? await getPremiumUnlock(wallet) : null;
 
     return NextResponse.json({
       success: true,
       report,
-      txHash: premiumRecord?.tx_hash,
+      txHash: premiumRecord?.txHash,
     });
   } catch (error) {
     console.error("Premium report error:", error);

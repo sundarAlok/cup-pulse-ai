@@ -113,17 +113,6 @@ export default function HomePage() {
             </div>
           </section>
 
-          {/* Footer */}
-          <footer className="mt-6 text-sm text-(--muted)">
-            <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-              <div>© {new Date().getFullYear()} CupPulse AI</div>
-              <div className="flex gap-4">
-                <Link href="/about" className="hover:underline">About</Link>
-                <Link href="/privacy" className="hover:underline">Privacy</Link>
-                <Link href="/terms" className="hover:underline">Terms</Link>
-              </div>
-            </div>
-          </footer>
         </div>
       </main>
     </div>

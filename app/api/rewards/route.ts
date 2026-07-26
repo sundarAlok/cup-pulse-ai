@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import {
+  deductUserPoints,
   getUserPoints,
-  deductPoints,
-} from "@/lib/db";
+} from "@/lib/firebaseStore";
 import { simulateRewardClaim } from "@/lib/injective";
 
 const POINTS_PER_INJ = 100;
@@ -11,10 +11,7 @@ const POINTS_PER_INJ = 100;
 export async function GET() {
   try {
     const cookieStore = await cookies();
-
-    const userId = Number(
-      cookieStore.get("userId")?.value
-    );
+    const userId = cookieStore.get("userId")?.value;
 
     if (!userId) {
       return NextResponse.json(
@@ -26,7 +23,7 @@ export async function GET() {
       );
     }
 
-    const points = getUserPoints(userId);
+    const points = await getUserPoints(userId);
 
     return NextResponse.json({
       success: true,
@@ -58,10 +55,7 @@ export async function GET() {
 export async function POST() {
   try {
     const cookieStore = await cookies();
-
-    const userId = Number(
-      cookieStore.get("userId")?.value
-    );
+    const userId = cookieStore.get("userId")?.value;
 
     if (!userId) {
       return NextResponse.json(
@@ -73,7 +67,7 @@ export async function POST() {
       );
     }
 
-    const points = getUserPoints(userId);
+    const points = await getUserPoints(userId);
 
     const availableRewards =
       Math.floor(
@@ -112,13 +106,13 @@ export async function POST() {
       availableRewards *
       POINTS_PER_INJ;
 
-    deductPoints(
+    await deductUserPoints(
       userId,
       pointsToDeduct
     );
 
     const updatedPoints =
-      getUserPoints(userId);
+      await getUserPoints(userId);
 
     return NextResponse.json({
       success: true,

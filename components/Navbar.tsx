@@ -5,6 +5,8 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
+import { IoExitOutline } from "react-icons/io5";
+import { CgProfile } from "react-icons/cg";
 
 const links = [
   { name: "Home", href: "/" },
@@ -20,6 +22,7 @@ type User = {
   id: number;
   username: string;
   points: number;
+  photoURL?: string | null;
 };
 
 export default function Navbar() {
@@ -27,14 +30,23 @@ export default function Navbar() {
 
   const [user, setUser] = useState<User | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [confirmLogout, setConfirmLogout] = useState(false);
 
   useEffect(() => {
     async function loadUser() {
       try {
         const res = await fetch("/api/me");
-        const data = await res.json();
+        if (!res.ok) {
+          return;
+        }
 
-        if (data.authenticated) {
+        const text = await res.text();
+        if (!text) {
+          return;
+        }
+
+        const data = JSON.parse(text);
+        if (data?.authenticated) {
           setUser(data.user);
         }
       } catch (error) {
@@ -46,6 +58,11 @@ export default function Navbar() {
   }, []);
 
   async function handleLogout() {
+    if (!confirmLogout) {
+      setConfirmLogout(true);
+      return;
+    }
+
     await fetch("/api/logout", {
       method: "POST",
     });
@@ -66,7 +83,7 @@ export default function Navbar() {
           backdrop-blur-2xl
           ring-1
           ring-black/5
-          overflow-hidden
+          overflow-visible
         "
       >
         <div className="flex h-15 items-center justify-between px-5">
@@ -119,25 +136,58 @@ export default function Navbar() {
           {/* Desktop Right Side */}
           <div className="hidden lg:flex items-center gap-3">
             {user ? (
-              <button
-                onClick={handleLogout}
-                className="
-                  rounded-full
-                  bg-gradient-to-r
-                  from-red-500
-                  to-rose-600
-                  px-6
-                  py-2.5
-                  text-sm
-                  font-semibold
-                  text-white
-                  transition-all
-                  duration-300
-                  hover:scale-105
-                "
-              >
-                Logout
-              </button>
+              <div className="flex items-center gap-3">
+                <Link
+                  href="/profile"
+                  className="
+                    flex
+                    h-10
+                    w-10
+                    items-center
+                    justify-center
+                    overflow-hidden
+                    rounded-full
+                    bg-gradient-to-br
+                    from-cyan-500
+                    via-blue-600
+                    to-violet-600
+                    text-white
+                    transition-all
+                    duration-300
+                    hover:scale-110
+                  "
+                  title="Profile"
+                >
+                  {user?.photoURL ? (
+                    <img
+                      src={user.photoURL}
+                      alt={user.username || "Profile"}
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <CgProfile className="h-5 w-5" />
+                  )}
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="
+                    flex
+                    h-10
+                    w-10
+                    items-center
+                    justify-center
+                    rounded-full
+                    bg-red-100
+                    text-red-600
+                    transition-all
+                    duration-300
+                    hover:scale-110
+                  "
+                  title="Logout"
+                >
+                  <IoExitOutline className="h-5 w-5" />
+                </button>
+              </div>
             ) : (
               <>
                 <Link
@@ -193,6 +243,34 @@ export default function Navbar() {
           </button>
         </div>
 
+        {confirmLogout && (
+          <div className="fixed inset-0 z-[300] flex items-center justify-center bg-black/40 px-4 mt-30">
+            <div className="w-full max-w-sm rounded-[24px] border border-slate-200 bg-white p-6 shadow-xl">
+              <h3 className="text-lg font-bold text-slate-900">
+                Are you sure you want to sign out?
+              </h3>
+              <p className="mt-2 text-sm text-slate-600">
+                This will end your current session.
+              </p>
+
+              <div className="mt-6 flex justify-end gap-3">
+                <button
+                  onClick={() => setConfirmLogout(false)}
+                  className="rounded-2xl border border-slate-300 px-4 py-2 font-medium text-slate-700"
+                >
+                  No
+                </button>
+                <button
+                  onClick={handleLogout}
+                  className="rounded-2xl bg-red-600 px-4 py-2 font-semibold text-white"
+                >
+                  Yes
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Mobile Menu */}
         {mobileMenuOpen && (
           <div className="lg:hidden border-t border-slate-200 bg-white/90 backdrop-blur-xl">
@@ -233,7 +311,7 @@ export default function Navbar() {
                     text-white
                   "
                 >
-                  Logout
+                  {confirmLogout ? "Confirm logout" : "Logout"}
                 </button>
               ) : (
                 <>
