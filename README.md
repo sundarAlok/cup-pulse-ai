@@ -11,8 +11,7 @@
 ![Injective](https://img.shields.io/badge/Injective-Integrated-00B3FF?style=for-the-badge)
 ![Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)
 
-**Live Demo:** https://your-vercel-deployment-link.vercel.app  
-**Repository:** https://github.com/your-username/cup-pulse-ai
+**Live Demo:** [https://your-vercel-deployment-link.vercel.app](https://cup-pulse-ai.vercel.app/)  
 
 ---
 
