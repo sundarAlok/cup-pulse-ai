@@ -328,11 +328,11 @@ docs/screenshots/
 
 Suggested screenshots:
 
-- [Home](/public/home.png)
-- [Premium](public/Premium.png)
-- [Dashboard](public/Dashboard.png)
-- [Rewards](public/Rewards.png)
-- [Profile](public/profile.png)
+![Home](/public/home.png)
+![Premium](public/Premium.png)
+![Dashboard](public/Dashboard.png)
+![Rewards](public/Rewards.png)
+![Profile](public/profile.png)
 
 ---
 
