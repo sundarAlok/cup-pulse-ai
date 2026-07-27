@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   User,
   Mail,
@@ -75,6 +75,16 @@ export default function ProfilePage() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [showSecretWords, setShowSecretWords] = useState(false);
+
+  const hasPremiumUnlock = useMemo(() => {
+    if (typeof window === "undefined") {
+      return false;
+    }
+
+    const storedWallet = window.localStorage.getItem("premiumWalletAddress")?.trim();
+    const storedTxHash = window.localStorage.getItem("premiumTxHash")?.trim();
+    return Boolean(storedWallet && storedTxHash);
+  }, []);
 
   useEffect(() => {
     async function loadProfile() {
@@ -272,8 +282,8 @@ export default function ProfilePage() {
                 </div>
 
                 <div className="flex items-center gap-2 text-slate-600">
-                  <Crown className="h-4 w-4 text-yellow-500" />
-                  CupPulse Member
+                  <Crown className={`h-4 w-4 ${profile.premiumActive || hasPremiumUnlock ? "text-yellow-500" : "text-slate-400"}`} />
+                  {profile.premiumActive || hasPremiumUnlock ? "Premium Member" : "Standard Member"}
                 </div>
               </div>
             </div>
