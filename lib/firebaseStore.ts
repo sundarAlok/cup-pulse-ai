@@ -10,6 +10,7 @@ export type FirestoreUserProfile = {
   displayName: string;
   photoURL?: string | null;
   secretWords?: string;
+  authProvider?: string;
   points: number;
   createdAt?: string;
   lastSeenAt?: string;
@@ -71,6 +72,7 @@ export async function ensureUserProfile(uid: string, overrides: Partial<Firestor
     photoURL: existing.photoURL ?? null,
     points: existing.points ?? 0,
     secretWords: existing.secretWords ?? "",
+    authProvider: existing.authProvider ?? overrides.authProvider ?? "email",
     createdAt: existing.createdAt ?? nowIso(),
     lastSeenAt: nowIso(),
     ...overrides,
@@ -98,6 +100,7 @@ export async function updateUserProfile(uid: string, updates: Partial<FirestoreU
     displayName: current?.displayName ?? current?.username ?? `user-${safeUid.slice(0, 6)}`,
     photoURL: current?.photoURL ?? null,
     secretWords: current?.secretWords ?? "",
+    authProvider: current?.authProvider ?? "email",
     points: current?.points ?? 0,
     createdAt: current?.createdAt ?? nowIso(),
     lastSeenAt: nowIso(),

@@ -29,6 +29,7 @@ export default function LoginPage() {
           displayName: user.displayName ?? email.split("@")[0],
           photoURL: user.photoURL ?? "",
           secretWords,
+          authProvider: "email",
         }),
       });
 
@@ -64,6 +65,7 @@ export default function LoginPage() {
             user.displayName ?? user.email?.split("@")[0] ?? "Google User",
           photoURL: user.photoURL ?? "",
           secretWords: secretWords || "google sign in",
+          authProvider: "google",
         }),
       });
 

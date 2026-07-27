@@ -326,13 +326,15 @@ docs/screenshots/
 
 ![App Architecture](docs/screenshots/architecture.png)
 
-Suggested screenshots:
+Screenshots:
 
 ![Home](/public/home.png)
 ![Premium](public/Premium.png)
 ![Dashboard](public/Dashboard.png)
 ![Rewards](public/Rewards.png)
 ![Profile](public/profile.png)
+![MCP](public/MCP.png)
+![Files](public/static%20vs%20dynamic%20files.png)
 
 ---
 

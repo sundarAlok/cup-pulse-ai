@@ -8,6 +8,7 @@ export async function POST(req: NextRequest) {
     const username = typeof body?.username === "string" ? body.username.trim() : "";
     const email = typeof body?.email === "string" ? body.email.trim().toLowerCase() : "";
     const secretWords = typeof body?.secretWords === "string" ? body.secretWords.trim() : "";
+    const authProvider = typeof body?.authProvider === "string" ? body.authProvider : "email";
 
     if (!uid || !username || !email || !secretWords) {
       return NextResponse.json(
@@ -24,6 +25,7 @@ export async function POST(req: NextRequest) {
       username,
       displayName: username,
       secretWords,
+      authProvider,
       points: 0,
     });
 

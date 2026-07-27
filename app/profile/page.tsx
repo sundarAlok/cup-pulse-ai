@@ -41,6 +41,7 @@ type ProfileState = {
   premiumUnlocked: string;
   rewardsClaimed: string;
   emailVerified: boolean;
+  authProvider: string;
 };
 
 const initialProfile: ProfileState = {
@@ -64,6 +65,7 @@ const initialProfile: ProfileState = {
   premiumUnlocked: "Not unlocked",
   rewardsClaimed: "0 INJ",
   emailVerified: false,
+  authProvider: "email",
 };
 
 export default function ProfilePage() {
@@ -106,6 +108,7 @@ export default function ProfilePage() {
             premiumUnlocked: data.profile.premiumUnlocked || initialProfile.premiumUnlocked,
             rewardsClaimed: data.profile.rewardsClaimed || initialProfile.rewardsClaimed,
             emailVerified: data.profile.emailVerified ?? initialProfile.emailVerified,
+            authProvider: data.profile.authProvider || initialProfile.authProvider,
           };
 
           setProfile(nextProfile);
@@ -196,6 +199,7 @@ export default function ProfilePage() {
           premiumUnlocked: data.profile.premiumUnlocked || profile.premiumUnlocked,
           rewardsClaimed: data.profile.rewardsClaimed || profile.rewardsClaimed,
           emailVerified: data.profile.emailVerified ?? profile.emailVerified,
+          authProvider: data.profile.authProvider || profile.authProvider,
         };
 
         setProfile(nextProfile);
@@ -246,7 +250,15 @@ export default function ProfilePage() {
                 {profile.displayName || "Your profile"}
               </h1>
 
-              <p className="mt-1 text-slate-500">@{profile.username || "user"}</p>
+              <div className="mt-1 flex flex-wrap items-center gap-2 text-slate-500">
+                <p>@{profile.username || "user"}</p>
+                {profile.authProvider?.toLowerCase() === "google" ? (
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-gradient-to-r from-emerald-50 to-green-100 px-3 py-1 text-xs font-semibold text-emerald-700 shadow-sm transition-all duration-200 hover:scale-105 hover:shadow-md">
+                  <CheckCircle2 className="h-4 w-4 fill-emerald-500 text-white" />
+                  Verified
+                </span>
+                ) : null}
+              </div>
 
               <div className="mt-5 grid gap-3 md:grid-cols-3">
                 <div className="flex items-center gap-2 text-slate-600">

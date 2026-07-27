@@ -10,6 +10,7 @@ export async function POST(req: NextRequest) {
     const displayName = typeof body?.displayName === "string" ? body.displayName.trim() : "";
     const photoURL = typeof body?.photoURL === "string" ? body.photoURL : "";
     const secretWords = typeof body?.secretWords === "string" ? body.secretWords.trim() : "";
+    const authProvider = typeof body?.authProvider === "string" ? body.authProvider : "email";
 
     if (!uid) {
       return NextResponse.json(
@@ -27,6 +28,7 @@ export async function POST(req: NextRequest) {
       displayName: displayName || username || email.split("@")[0] || `user-${uid.slice(0, 6)}`,
       photoURL: photoURL || null,
       secretWords,
+      authProvider,
     });
 
     const response = NextResponse.json({

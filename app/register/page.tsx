@@ -54,6 +54,7 @@ export default function RegisterPage() {
           username: form.username,
           email: user.email ?? form.email,
           secretWords: form.secretWords,
+          authProvider: "email",
         }),
       });
 
@@ -86,6 +87,7 @@ export default function RegisterPage() {
             user.displayName ?? user.email?.split("@")[0] ?? "Google User",
           email: user.email ?? "",
           secretWords: "google sign in",
+          authProvider: "google",
         }),
       });
 
