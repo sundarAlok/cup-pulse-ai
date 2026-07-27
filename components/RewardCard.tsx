@@ -26,51 +26,44 @@ export default function RewardCard() {
     }
   }, []);
 
-useEffect(() => {
-  let mounted = true;
+  useEffect(() => {
+    let mounted = true;
 
-  const initialize = async () => {
-    try {
-      const res = await fetch("/api/rewards");
-      const data = await res.json();
+    const initialize = async () => {
+      try {
+        const res = await fetch("/api/rewards");
+        const data = await res.json();
 
-      if (mounted && data.success) {
-        setPoints(data.points);
+        if (mounted && data.success) {
+          setPoints(data.points);
+        }
+      } catch (error) {
+        console.error(error);
       }
-    } catch (error) {
-      console.error(error);
-    }
-  };
+    };
 
-  void initialize();
+    void initialize();
 
-  const refreshPoints = async () => {
-    try {
-      const res = await fetch("/api/rewards");
-      const data = await res.json();
+    const refreshPoints = async () => {
+      try {
+        const res = await fetch("/api/rewards");
+        const data = await res.json();
 
-      if (mounted && data.success) {
-        setPoints(data.points);
+        if (mounted && data.success) {
+          setPoints(data.points);
+        }
+      } catch (error) {
+        console.error(error);
       }
-    } catch (error) {
-      console.error(error);
-    }
-  };
+    };
 
-  window.addEventListener(
-    "pointsUpdated",
-    refreshPoints
-  );
+    window.addEventListener("points-updated", refreshPoints);
 
-  return () => {
-    mounted = false;
-
-    window.removeEventListener(
-      "pointsUpdated",
-      refreshPoints
-    );
-  };
-}, []);
+    return () => {
+      mounted = false;
+      window.removeEventListener("points-updated", refreshPoints);
+    };
+  }, []);
 
   const claimReward = async () => {
     try {
@@ -82,14 +75,10 @@ useEffect(() => {
       });
 
       const data = await res.json();
-
-      setMessage(data.message);
+      setMessage(data.message || "Reward claim failed.");
 
       await loadPoints();
-
-      window.dispatchEvent(
-        new CustomEvent("points-updated")
-      );
+      window.dispatchEvent(new CustomEvent("points-updated"));
     } catch {
       setMessage("Reward claim failed.");
     } finally {

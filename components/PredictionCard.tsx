@@ -98,11 +98,13 @@ export default function PredictionCard() {
 
       if (typeof data.points === "number") {
         setPoints(data.points);
+        window.dispatchEvent(new CustomEvent("points-updated"));
       } else {
         const rewardRes = await fetch("/api/rewards");
         const rewardPayload = await rewardRes.json();
         if (rewardPayload.success) {
           setPoints(Number(rewardPayload.points ?? 0));
+          window.dispatchEvent(new CustomEvent("points-updated"));
         }
       }
 

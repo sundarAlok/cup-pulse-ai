@@ -265,11 +265,13 @@ export async function getLeaderboardRows(limitCount = 50) {
 
   return snapshot.docs.map((docSnap: QueryDocumentSnapshot) => {
     const data = docSnap.data() as FirestoreUserProfile;
+    const username = data.username || data.displayName || `user-${docSnap.id.slice(0, 6)}`;
     return {
       id: docSnap.id,
-      username: data.username,
+      username,
+      displayName: data.displayName ?? "",
       points: data.points ?? 0,
-      photoURL: data.photoURL ?? "",
+      photoURL: data.photoURL ?? null,
     };
   });
 }

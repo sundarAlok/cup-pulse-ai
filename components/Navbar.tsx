@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
 import { IoExitOutline } from "react-icons/io5";
 import { CgProfile } from "react-icons/cg";
+import UserAvatar from "@/components/UserAvatar";
 
 const links = [
   { name: "Home", href: "/" },
@@ -159,10 +160,12 @@ export default function Navbar() {
                   title="Profile"
                 >
                   {user?.photoURL ? (
-                    <img
+                    <UserAvatar
                       src={user.photoURL}
                       alt={user.username || "Profile"}
                       className="h-full w-full object-cover"
+                      fallbackClassName="flex h-full w-full items-center justify-center bg-gradient-to-br from-cyan-500 via-blue-600 to-violet-600 text-white"
+                      fallbackText={user.username || "P"}
                     />
                   ) : (
                     <CgProfile className="h-5 w-5" />

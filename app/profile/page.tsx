@@ -10,13 +10,13 @@ import {
   Flame,
   Target,
   ShieldCheck,
-  Wallet,
   Crown,
   Lock,
   CheckCircle2,
   Eye,
   EyeOff,
 } from "lucide-react";
+import UserAvatar from "@/components/UserAvatar";
 
 type ProfileField = "username" | "displayName" | "photoURL" | "secretWords";
 
@@ -68,7 +68,7 @@ const initialProfile: ProfileState = {
 
 export default function ProfilePage() {
   const [profile, setProfile] = useState<ProfileState>(initialProfile);
-  const [loading, setLoading] = useState(true);
+  const [draftProfile, setDraftProfile] = useState<ProfileState>(initialProfile);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -84,13 +84,53 @@ export default function ProfilePage() {
 
         const data = await res.json();
         if (data.authenticated && data.profile) {
+          const nextProfile = {
+            ...initialProfile,
+            username: data.profile.username || initialProfile.username,
+            displayName: data.profile.displayName || initialProfile.displayName,
+            email: data.profile.email || initialProfile.email,
+            photoURL: data.profile.photoURL || initialProfile.photoURL,
+            secretWords: data.profile.secretWords || initialProfile.secretWords,
+            points: data.profile.points ?? initialProfile.points,
+            rank: data.profile.rank ?? initialProfile.rank,
+            streak: data.profile.streak ?? initialProfile.streak,
+            predictions: data.profile.predictions ?? initialProfile.predictions,
+            correctPredictions: data.profile.correctPredictions ?? initialProfile.correctPredictions,
+            wrongPredictions: data.profile.wrongPredictions ?? initialProfile.wrongPredictions,
+            accuracy: data.profile.accuracy || initialProfile.accuracy,
+            bestPrediction: data.profile.bestPrediction || initialProfile.bestPrediction,
+            joined: data.profile.joined || initialProfile.joined,
+            lastCheckin: data.profile.lastCheckin || initialProfile.lastCheckin,
+            premiumActive: data.profile.premiumActive ?? initialProfile.premiumActive,
+            walletAddress: data.profile.walletAddress || initialProfile.walletAddress,
+            premiumUnlocked: data.profile.premiumUnlocked || initialProfile.premiumUnlocked,
+            rewardsClaimed: data.profile.rewardsClaimed || initialProfile.rewardsClaimed,
+            emailVerified: data.profile.emailVerified ?? initialProfile.emailVerified,
+          };
+
+          setProfile(nextProfile);
+          setDraftProfile(nextProfile);
+        }
+      } catch {
+        setError("Unable to load your profile right now.");
+      }
+    }
+
+    void loadProfile();
+  }, []);
+
+  useEffect(() => {
+    const refreshPoints = async () => {
+      try {
+        const res = await fetch("/api/profile");
+        if (!res.ok) {
+          return;
+        }
+
+        const data = await res.json();
+        if (data.authenticated && data.profile) {
           setProfile((current) => ({
             ...current,
-            username: data.profile.username || current.username,
-            displayName: data.profile.displayName || current.displayName,
-            email: data.profile.email || current.email,
-            photoURL: data.profile.photoURL || current.photoURL,
-            secretWords: data.profile.secretWords || current.secretWords,
             points: data.profile.points ?? current.points,
             rank: data.profile.rank ?? current.rank,
             streak: data.profile.streak ?? current.streak,
@@ -99,17 +139,18 @@ export default function ProfilePage() {
           }));
         }
       } catch {
-        setError("Unable to load your profile right now.");
-      } finally {
-        setLoading(false);
+        // Ignore refresh failures.
       }
-    }
+    };
 
-    void loadProfile();
+    window.addEventListener("points-updated", refreshPoints);
+    return () => {
+      window.removeEventListener("points-updated", refreshPoints);
+    };
   }, []);
 
   function handleFieldChange(field: ProfileField, value: string) {
-    setProfile((current) => ({ ...current, [field]: value }));
+    setDraftProfile((current) => ({ ...current, [field]: value }));
     setError("");
     setSuccess("");
   }
@@ -124,10 +165,10 @@ export default function ProfilePage() {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          username: profile.username.trim(),
-          displayName: profile.displayName.trim(),
-          photoURL: profile.photoURL.trim(),
-          secretWords: profile.secretWords.trim(),
+          username: draftProfile.username.trim(),
+          displayName: draftProfile.displayName.trim(),
+          photoURL: draftProfile.photoURL.trim(),
+          secretWords: draftProfile.secretWords.trim(),
         }),
       });
 
@@ -137,19 +178,28 @@ export default function ProfilePage() {
       }
 
       if (data.profile) {
-        setProfile((current) => ({
-          ...current,
-          username: data.profile.username || current.username,
-          displayName: data.profile.displayName || current.displayName,
-          email: data.profile.email || current.email,
-          photoURL: data.profile.photoURL || current.photoURL,
-          secretWords: data.profile.secretWords || current.secretWords,
-          points: data.profile.points ?? current.points,
-          rank: data.profile.rank ?? current.rank,
-          streak: data.profile.streak ?? current.streak,
-          predictions: data.profile.predictions ?? current.predictions,
-          joined: data.profile.joined || current.joined,
-        }));
+        const nextProfile = {
+          ...profile,
+          username: data.profile.username || profile.username,
+          displayName: data.profile.displayName || profile.displayName,
+          email: data.profile.email || profile.email,
+          photoURL: data.profile.photoURL || profile.photoURL,
+          secretWords: data.profile.secretWords || profile.secretWords,
+          points: data.profile.points ?? profile.points,
+          rank: data.profile.rank ?? profile.rank,
+          streak: data.profile.streak ?? profile.streak,
+          predictions: data.profile.predictions ?? profile.predictions,
+          joined: data.profile.joined || profile.joined,
+          lastCheckin: data.profile.lastCheckin || profile.lastCheckin,
+          premiumActive: data.profile.premiumActive ?? profile.premiumActive,
+          walletAddress: data.profile.walletAddress || profile.walletAddress,
+          premiumUnlocked: data.profile.premiumUnlocked || profile.premiumUnlocked,
+          rewardsClaimed: data.profile.rewardsClaimed || profile.rewardsClaimed,
+          emailVerified: data.profile.emailVerified ?? profile.emailVerified,
+        };
+
+        setProfile(nextProfile);
+        setDraftProfile(nextProfile);
       }
 
       setSuccess("Profile updated successfully.");
@@ -179,10 +229,12 @@ export default function ProfilePage() {
           <div className="flex flex-col gap-6 md:flex-row md:items-center">
             <div className="flex h-28 w-28 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-cyan-500 via-blue-600 to-violet-600 text-white">
               {profile.photoURL ? (
-                <img
+                <UserAvatar
                   src={profile.photoURL}
                   alt={profile.displayName || profile.username}
                   className="h-full w-full object-cover"
+                  fallbackClassName="flex h-full w-full items-center justify-center bg-gradient-to-br from-cyan-500 via-blue-600 to-violet-600 text-white"
+                  fallbackText={profile.displayName || profile.username || "U"}
                 />
               ) : (
                 <User className="h-12 w-12" />
@@ -249,7 +301,7 @@ export default function ProfilePage() {
                 <label className="block">
                   <span className="mb-2 block text-sm font-medium text-slate-700">Username</span>
                   <input
-                    value={profile.username}
+                    value={draftProfile.username}
                     onChange={(e) => handleFieldChange("username", e.target.value)}
                     className="w-full rounded-2xl border border-slate-200 px-4 py-3 outline-none"
                   />
@@ -258,7 +310,7 @@ export default function ProfilePage() {
                 <label className="block">
                   <span className="mb-2 block text-sm font-medium text-slate-700">Display Name</span>
                   <input
-                    value={profile.displayName}
+                    value={draftProfile.displayName}
                     onChange={(e) => handleFieldChange("displayName", e.target.value)}
                     className="w-full rounded-2xl border border-slate-200 px-4 py-3 outline-none"
                   />
@@ -268,7 +320,7 @@ export default function ProfilePage() {
               <label className="block">
                 <span className="mb-2 block text-sm font-medium text-slate-700">Photo URL</span>
                 <input
-                  value={profile.photoURL}
+                  value={draftProfile.photoURL}
                   onChange={(e) => handleFieldChange("photoURL", e.target.value)}
                   className="w-full rounded-2xl border border-slate-200 px-4 py-3 outline-none"
                   placeholder="https://..."
@@ -280,7 +332,7 @@ export default function ProfilePage() {
                 <div className="relative">
                   <input
                     type={showSecretWords ? "text" : "password"}
-                    value={profile.secretWords}
+                    value={draftProfile.secretWords}
                     onChange={(e) => handleFieldChange("secretWords", e.target.value)}
                     className="w-full rounded-2xl border border-slate-200 px-4 py-3 pr-12 outline-none"
                     placeholder="Enter your secret words"
@@ -340,7 +392,7 @@ export default function ProfilePage() {
             </p>
             <button
               onClick={handleSave}
-              disabled={saving || !profile.username.trim() || !profile.displayName.trim()}
+              disabled={saving || !draftProfile.username.trim() || !draftProfile.displayName.trim()}
               className="rounded-2xl bg-cyan-600 px-5 py-3 font-semibold text-white disabled:cursor-not-allowed disabled:opacity-50"
             >
               {saving ? "Saving..." : "Save Changes"}

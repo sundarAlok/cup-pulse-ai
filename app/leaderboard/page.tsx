@@ -1,8 +1,10 @@
 import { getLeaderboardRows } from "@/lib/firebaseStore";
+import UserAvatar from "@/components/UserAvatar";
 
 type User = {
   id: string;
   username: string;
+  displayName?: string | null;
   points: number;
   photoURL?: string | null;
 };
@@ -45,17 +47,13 @@ export default async function LeaderboardPage() {
               >
                 <td className="p-4">
                   <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-slate-100">
-                    {user.photoURL ? (
-                      <img
-                        src={user.photoURL}
-                        alt={user.username}
-                        className="h-full w-full object-cover"
-                      />
-                    ) : (
-                      <span className="text-xs font-semibold text-slate-500">
-                        {user.username?.slice(0, 1).toUpperCase()}
-                      </span>
-                    )}
+                    <UserAvatar
+                      src={user.photoURL}
+                      alt={user.username || user.displayName || "User"}
+                      className="h-full w-full object-cover"
+                      fallbackClassName="flex h-full w-full items-center justify-center bg-slate-100 text-xs font-semibold text-slate-500"
+                      fallbackText={user.username || user.displayName || "U"}
+                    />
                   </div>
                 </td>
 
@@ -64,7 +62,7 @@ export default async function LeaderboardPage() {
                 </td>
 
                 <td className="p-4 font-medium">
-                  {user.username}
+                  {user.username || user.displayName || "Unknown"}
                 </td>
 
                 <td className="p-4 text-right font-bold text-blue-600">
