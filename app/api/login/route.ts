@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { ensureUserProfile } from "@/lib/firebaseStore";
+import { ensureUserProfile, type FirestoreUserProfile } from "@/lib/firebaseStore";
 
 export async function POST(req: NextRequest) {
   try {
@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
     const email = typeof body?.email === "string" ? body.email.trim().toLowerCase() : "";
     const username = typeof body?.username === "string" ? body.username.trim() : "";
     const displayName = typeof body?.displayName === "string" ? body.displayName.trim() : "";
-    const photoURL = typeof body?.photoURL === "string" ? body.photoURL : "";
+    const photoURL = typeof body?.photoURL === "string" ? body.photoURL.trim() : "";
     const secretWords = typeof body?.secretWords === "string" ? body.secretWords.trim() : "";
     const authProvider = typeof body?.authProvider === "string" ? body.authProvider : "email";
 
@@ -22,14 +22,19 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    await ensureUserProfile(uid, {
+    const overrides: Partial<FirestoreUserProfile> = {
       email,
       username: username || displayName || email.split("@")[0] || `user-${uid.slice(0, 6)}`,
       displayName: displayName || username || email.split("@")[0] || `user-${uid.slice(0, 6)}`,
-      photoURL: photoURL || null,
       secretWords,
       authProvider,
-    });
+    };
+
+    if (photoURL) {
+      overrides.photoURL = photoURL;
+    }
+
+    await ensureUserProfile(uid, overrides);
 
     const response = NextResponse.json({
       success: true,

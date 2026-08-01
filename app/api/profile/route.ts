@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { adminDb } from "@/lib/firebaseAdmin";
 import { getCheckinRecord, getLeaderboardRows, getUserProfile, updateUserProfile } from "@/lib/firebaseStore";
+import { resolveStoredPhotoUrl } from "@/lib/profileUpdates";
 
 function formatJoinedDate(value?: string | null) {
   if (!value) {
@@ -89,10 +90,13 @@ export async function PUT(req: NextRequest) {
     );
   }
 
+  const currentProfile = await getUserProfile(userId);
+  const resolvedPhotoUrl = resolveStoredPhotoUrl(currentProfile?.photoURL, photoURL);
+
   const updatedProfile = await updateUserProfile(userId, {
     username,
     displayName,
-    photoURL: photoURL || null,
+    photoURL: resolvedPhotoUrl || null,
     secretWords,
   });
 

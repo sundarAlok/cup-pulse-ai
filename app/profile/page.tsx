@@ -75,15 +75,24 @@ export default function ProfilePage() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [showSecretWords, setShowSecretWords] = useState(false);
+  const [hasPremiumUnlock, setHasPremiumUnlock] = useState(false);
 
-  const hasPremiumUnlock = useMemo(() => {
-    if (typeof window === "undefined") {
-      return false;
-    }
-
+  useEffect(() => {
     const storedWallet = window.localStorage.getItem("premiumWalletAddress")?.trim();
     const storedTxHash = window.localStorage.getItem("premiumTxHash")?.trim();
-    return Boolean(storedWallet && storedTxHash);
+    const unlock = Boolean(storedWallet && storedTxHash);
+
+    if (!unlock) {
+      return;
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      setHasPremiumUnlock(true);
+    }, 0);
+
+    return () => {
+      window.clearTimeout(timeoutId);
+    };
   }, []);
 
   useEffect(() => {
